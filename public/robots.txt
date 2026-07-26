@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /dashboard/
-Disallow: /admin/
+Disallow: /admin
+Disallow: /admin-app/
 Allow: /
 
 Sitemap: https://app-showpay.in/sitemap.xml

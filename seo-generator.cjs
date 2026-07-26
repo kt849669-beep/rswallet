@@ -40,7 +40,8 @@ fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemap, 'utf8');
 // Robots
 const robots = `User-agent: *
 Disallow: /dashboard/
-Disallow: /admin/
+Disallow: /admin
+Disallow: /admin-app/
 Allow: /
 
 Sitemap: https://app-showpay.in/sitemap.xml`;
