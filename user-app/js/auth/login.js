@@ -53,8 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (limitPopup && limitPopup.innerHTML.trim() === "") {
              limitPopup.innerHTML = `
               <div style="background: #fff; padding: 24px; border-radius: 12px; max-width: 90%; width: 320px; text-align: center;">
-                <div style="margin-bottom: 16px; color: #f59e0b">
-                  <i data-lucide="alert-triangle" style="width: 48px; height: 48px; margin: 0 auto"></i>
+                <div style="margin-bottom: 16px; color: #3b82f6">
+                  <i data-lucide="info" style="width: 48px; height: 48px; margin: 0 auto"></i>
                 </div>
                 <h3 style="font-size: 18px; margin-bottom: 12px; font-weight: 600; color: #1f2937;">Update Request Already Received</h3>
                 <p style="font-size: 14px; color: #4b5563; margin-bottom: 16px; line-height: 1.5;">Please wait some time. You can use another link:</p>
