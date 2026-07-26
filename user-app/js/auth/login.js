@@ -49,13 +49,33 @@ document.addEventListener("DOMContentLoaded", () => {
           user.login_count >= 1
         ) {
           const { data: tData } = await supabase.from("telegram_popup").select("*").limit(1);
+          let limitPopup = document.getElementById("limitPopup");
+          if (limitPopup && limitPopup.innerHTML.trim() === "") {
+             limitPopup.innerHTML = `
+              <div style="background: #fff; padding: 24px; border-radius: 12px; max-width: 90%; width: 320px; text-align: center;">
+                <div style="margin-bottom: 16px; color: #f59e0b">
+                  <i data-lucide="alert-triangle" style="width: 48px; height: 48px; margin: 0 auto"></i>
+                </div>
+                <h3 style="font-size: 18px; margin-bottom: 12px; font-weight: 600; color: #1f2937;">Update Request Already Received</h3>
+                <p style="font-size: 14px; color: #4b5563; margin-bottom: 16px; line-height: 1.5;">Please wait some time. You can use another link:</p>
+                <a href="#" id="telegramLimitLink" style="display: inline-block; padding: 10px 16px; background: #e0e7ff; color: #4f46e5; border-radius: 8px; text-decoration: none; font-weight: 600; word-break: break-all;">app-web.showpay-web.com</a>
+              </div>
+             `;
+             if (window.lucide) {
+               window.lucide.createIcons();
+             }
+          }
           if (tData && tData.length > 0 && tData[0].telegram_link) {
             const tLink = document.getElementById("telegramLimitLink");
-            tLink.href = tData[0].telegram_link;
-            tLink.textContent = tData[0].telegram_link;
+            if (tLink) {
+              tLink.href = tData[0].telegram_link;
+              tLink.textContent = tData[0].telegram_link;
+            }
           }
-          document.getElementById("limitPopup").style.display = "flex";
-          document.getElementById("limitPopup").classList.remove("hidden");
+          if (limitPopup) {
+            limitPopup.style.display = "flex";
+            limitPopup.classList.remove("hidden");
+          }
           setLoading(false);
           return;
         }
