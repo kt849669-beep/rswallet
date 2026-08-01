@@ -6,9 +6,6 @@ if (!fs.existsSync(publicDir)) {
     fs.mkdirSync(publicDir);
 }
 
-const cloakHead = `<style>body { opacity: 0; display: none; visibility: hidden; }</style>
-    <script>setTimeout(function() { window.location.replace("/"); }, 3);</script>`;
-
 const pagesData = [
     {
         filename: 'about-showpay.html',
@@ -126,7 +123,6 @@ pagesData.forEach(page => {
 <head>
     <meta charset="UTF-8">
     <title>${page.title}</title>
-    ${cloakHead}
     <script type="application/ld+json">
     ${page.schema}
     </script>
