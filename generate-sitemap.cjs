@@ -2,29 +2,79 @@ const fs = require('fs');
 const path = require('path');
 
 const domain = 'https://app-showpay.in';
-const pagesDir = path.join(__dirname, 'user-app', 'pages');
 const sitemapFile = path.join(__dirname, 'public', 'sitemap.xml');
 
-// Public pages to include in the sitemap
-const includePages = ['login.html', 'home.html'];
+const urls = [
+  {
+    loc: `${domain}/`,
+    source: path.join(__dirname, 'user-app', 'pages', 'login.html'),
+    changefreq: 'weekly',
+    priority: '1.0',
+  },
+  {
+    loc: `${domain}/about-showpay.html`,
+    source: path.join(__dirname, 'public', 'about-showpay.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
+  {
+    loc: `${domain}/showpay-apk.html`,
+    source: path.join(__dirname, 'public', 'showpay-apk.html'),
+    changefreq: 'monthly',
+    priority: '0.8',
+  },
+  {
+    loc: `${domain}/showpay-support.html`,
+    source: path.join(__dirname, 'public', 'showpay-support.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
+  {
+    loc: `${domain}/showpay-usdt.html`,
+    source: path.join(__dirname, 'public', 'showpay-usdt.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
+];
+
+function xmlEscape(value) {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&apos;');
+}
+
+function sourceLastModified(source) {
+  return fs.statSync(source).mtime.toISOString().slice(0, 10);
+}
 
 function generateSitemap() {
-  const currentDate = new Date().toISOString();
-  
-  let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-
-  // Add the root domain (index.html)
-  sitemapContent += `  <url>\n    <loc>${domain}/</loc>\n    <lastmod>${currentDate}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
-
-  includePages.forEach(page => {
-    if (fs.existsSync(path.join(pagesDir, page))) {
-      sitemapContent += `  <url>\n    <loc>${domain}/user-app/pages/${page}</loc>\n    <lastmod>${currentDate}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>${page === 'login.html' ? '0.9' : '0.8'}</priority>\n  </url>\n`;
+  for (const entry of urls) {
+    if (!fs.existsSync(entry.source)) {
+      throw new Error(`Cannot generate sitemap: missing source ${entry.source}`);
     }
-  });
+  }
 
-  sitemapContent += `</urlset>`;
+  const entries = urls
+    .map(
+      (entry) => `  <url>
+    <loc>${xmlEscape(entry.loc)}</loc>
+    <lastmod>${sourceLastModified(entry.source)}</lastmod>
+    <changefreq>${entry.changefreq}</changefreq>
+    <priority>${entry.priority}</priority>
+  </url>`,
+    )
+    .join('\n');
 
-  fs.writeFileSync(sitemapFile, sitemapContent, 'utf8');
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries}
+</urlset>
+`;
+
+  fs.writeFileSync(sitemapFile, sitemap, 'utf8');
   console.log(`Sitemap generated successfully at ${sitemapFile}`);
 }
 
