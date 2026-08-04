@@ -55,6 +55,13 @@ function validateJsonLd(html, label) {
 const login = read('user-app/pages/login.html');
 expect(login.includes('<h1 class="header">Login</h1>'), 'login: missing visible H1');
 expect(
+  login.includes('Sign in to your ShowPay account'),
+  'login: missing visible ShowPay brand context',
+);
+for (const filename of ['about-showpay.html', 'showpay-apk.html', 'showpay-support.html']) {
+  expect(login.includes(`href="/${filename}"`), `login: missing internal link to ${filename}`);
+}
+expect(
   headValue(login, 'link', 'rel', 'canonical', 'href') === `${domain}/`,
   'login: canonical must be the root URL',
 );
