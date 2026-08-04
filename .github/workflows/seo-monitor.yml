@@ -35,11 +35,10 @@ jobs:
 
       - name: Get a short-lived Google read-only token
         id: google_auth
-        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GSC_SERVICE_ACCOUNT_EMAIL != '' }}
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GSC_SERVICE_ACCOUNT_EMAIL }}
+          workload_identity_provider: projects/236413037487/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: showpay-seo-agent@showpay-seo-monitor.iam.gserviceaccount.com
           token_format: access_token
           access_token_scopes: https://www.googleapis.com/auth/webmasters.readonly
 
