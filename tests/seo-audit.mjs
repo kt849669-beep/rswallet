@@ -53,7 +53,7 @@ function validateJsonLd(html, label) {
 }
 
 const login = read('user-app/pages/login.html');
-expect(login.includes('<h1 class="header">ShowPay Login</h1>'), 'login: missing visible H1');
+expect(login.includes('<h1 class="header">Login</h1>'), 'login: missing visible H1');
 expect(
   headValue(login, 'link', 'rel', 'canonical', 'href') === `${domain}/`,
   'login: canonical must be the root URL',
