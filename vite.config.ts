@@ -27,6 +27,13 @@ export default defineConfig(() => {
       port: 3000,
       host: '0.0.0.0'
     },
+    // This is a standalone plain-CSS project. Do not inherit a PostCSS config
+    // from a parent workspace when the repository is checked out inside one.
+    css: {
+      postcss: {
+        plugins: []
+      }
+    },
     build: {
       rollupOptions: {
         input: getHtmlFiles(__dirname)

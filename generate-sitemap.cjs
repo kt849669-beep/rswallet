@@ -35,6 +35,36 @@ const urls = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    loc: `${domain}/showpay-guide.html`,
+    source: path.join(__dirname, 'public', 'showpay-guide.html'),
+    changefreq: 'monthly',
+    priority: '0.8',
+  },
+  {
+    loc: `${domain}/how-to-use-showpay.html`,
+    source: path.join(__dirname, 'public', 'how-to-use-showpay.html'),
+    changefreq: 'monthly',
+    priority: '0.8',
+  },
+  {
+    loc: `${domain}/how-to-deposit-showpay.html`,
+    source: path.join(__dirname, 'public', 'how-to-deposit-showpay.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
+  {
+    loc: `${domain}/how-to-deposit-usdt-showpay.html`,
+    source: path.join(__dirname, 'public', 'how-to-deposit-usdt-showpay.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
+  {
+    loc: `${domain}/showpay-password-help.html`,
+    source: path.join(__dirname, 'public', 'showpay-password-help.html'),
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 function xmlEscape(value) {

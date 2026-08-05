@@ -14,14 +14,7 @@
   font-weight: 600;
   color: #007bff;
   border-bottom: 1px solid #f0f0f0;
-  margin-bottom: 6px;
-}
-
-.login-subtitle {
-  margin: 0 0 85px;
-  color: #6b7280;
-  font-size: 13px;
-  text-align: center;
+  margin-bottom: 115px;
 }
 
 #loginForm {
@@ -92,24 +85,4 @@
   color: #007bff; /* matching page theme blue */
   text-decoration: none;
   font-weight: 600;
-}
-
-.seo-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 14px;
-  margin: 0 0 18px;
-  font-size: 12px;
-}
-
-.seo-links a {
-  color: #6b7280;
-  text-decoration: none;
-}
-
-.seo-links a:hover,
-.seo-links a:focus-visible {
-  color: #007bff;
-  text-decoration: underline;
 }

@@ -9,6 +9,11 @@ const publicPages = [
   'showpay-apk.html',
   'showpay-support.html',
   'showpay-usdt.html',
+  'showpay-guide.html',
+  'how-to-use-showpay.html',
+  'how-to-deposit-showpay.html',
+  'how-to-deposit-usdt-showpay.html',
+  'showpay-password-help.html',
 ];
 
 const failures = [];
@@ -54,13 +59,6 @@ function validateJsonLd(html, label) {
 
 const login = read('user-app/pages/login.html');
 expect(login.includes('<h1 class="header">Login</h1>'), 'login: missing visible H1');
-expect(
-  login.includes('Sign in to your ShowPay account'),
-  'login: missing visible ShowPay brand context',
-);
-for (const filename of ['about-showpay.html', 'showpay-apk.html', 'showpay-support.html']) {
-  expect(login.includes(`href="/${filename}"`), `login: missing internal link to ${filename}`);
-}
 expect(
   headValue(login, 'link', 'rel', 'canonical', 'href') === `${domain}/`,
   'login: canonical must be the root URL',
@@ -109,6 +107,14 @@ expect(
   `sitemap URLs mismatch: ${sitemapLocations.join(', ')}`,
 );
 expect(!sitemap.includes('/user-app/'), 'sitemap: internal app URL must not be submitted');
+expect(
+  read('public/showpay-guide.html').includes('alternateName'),
+  'guide hub: missing ShowPay alternate-name entity signal',
+);
+for (const filename of publicPages) {
+  const html = read(`public/${filename}`);
+  expect(html.includes('href="/showpay-guide.html"'), `${filename}: missing guide hub link`);
+}
 
 const robots = read('public/robots.txt');
 expect(robots.includes(`Sitemap: ${domain}/sitemap.xml`), 'robots: sitemap directive missing');
