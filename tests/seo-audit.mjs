@@ -18,6 +18,18 @@ const publicPages = [
 
 const failures = [];
 
+const targetQueries = {
+  'about-showpay.html': ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login'],
+  'showpay-apk.html': ['ShowPay app', 'ShowPay APK', 'Show pay app', 'ShowPay login'],
+  'showpay-support.html': ['ShowPay support', 'ShowPay login help', 'ShowPay password'],
+  'showpay-usdt.html': ['ShowPay USDT', 'ShowPay USDT deposit', 'ShowPay USDT withdrawal'],
+  'showpay-guide.html': ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login', 'ShowPay app', 'ShowPay APK', 'ShowPay USDT', 'ShowPay password'],
+  'how-to-use-showpay.html': ['How to use ShowPay', 'ShowPay login', 'ShowPay app'],
+  'how-to-deposit-showpay.html': ['How to deposit in ShowPay', 'ShowPay deposit', 'ShowPay login'],
+  'how-to-deposit-usdt-showpay.html': ['How to deposit USDT in ShowPay', 'ShowPay USDT deposit', 'ShowPay USDT'],
+  'showpay-password-help.html': ['ShowPay password', 'ShowPay password reset', 'ShowPay login help'],
+};
+
 function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
@@ -114,6 +126,13 @@ for (const filename of publicPages) {
       `${label}: missing internal link to ${relatedPage}`,
     );
   }
+  for (const query of targetQueries[filename]) {
+    expect(
+      html.toLowerCase().includes(query.toLowerCase()),
+      `${label}: missing mapped search topic ${query}`,
+    );
+  }
+  expect(html.includes('Search topics covered'), `${label}: missing visible topic mapping`);
   validateJsonLd(html, label);
 }
 
