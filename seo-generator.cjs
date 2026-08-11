@@ -356,6 +356,7 @@ const pages = [
 
 const pageEnhancements = {
   'about-showpay.html': {
+    queries: ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login'],
     summary: 'ShowPay is a mobile-friendly web account experience. Use this site for the ShowPay login and review only the tools and instructions displayed inside your own account.',
     audience: 'New or returning users who want to confirm what ShowPay is, where to sign in and which help pages match their task.',
     keyPoints: [
@@ -369,6 +370,7 @@ const pageEnhancements = {
     ],
   },
   'showpay-apk.html': {
+    queries: ['ShowPay app', 'ShowPay APK', 'Show pay app', 'ShowPay login'],
     summary: 'Use the ShowPay mobile web login on app-showpay.in. This site does not publish a direct APK file, so avoid downloads from unverified pages, messages or social posts.',
     audience: 'People searching for ShowPay app access, ShowPay APK information or the correct mobile login.',
     keyPoints: [
@@ -382,6 +384,7 @@ const pageEnhancements = {
     ],
   },
   'showpay-support.html': {
+    queries: ['ShowPay support', 'ShowPay login help', 'ShowPay password'],
     summary: 'Start with the exact problem shown on your screen, use the existing recovery option for login issues and verify transaction details inside your own dashboard.',
     audience: 'Users who need login, password, app-access, deposit or USDT transaction guidance.',
     keyPoints: [
@@ -395,6 +398,7 @@ const pageEnhancements = {
     ],
   },
   'showpay-usdt.html': {
+    queries: ['ShowPay USDT', 'ShowPay USDT deposit', 'ShowPay USDT withdrawal'],
     summary: 'For ShowPay USDT actions, match the network, verify the complete wallet address and wait for the required confirmations before attempting another transfer.',
     audience: 'Users researching ShowPay USDT deposits, withdrawals, network selection or transaction-status checks.',
     keyPoints: [
@@ -408,6 +412,7 @@ const pageEnhancements = {
     ],
   },
   'showpay-guide.html': {
+    queries: ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login', 'ShowPay app', 'ShowPay APK', 'ShowPay USDT', 'ShowPay password'],
     summary: 'Choose one task-focused ShowPay guide: login and password help, mobile app access, general deposits or USDT network checks.',
     audience: 'Anyone who wants a single directory for the available ShowPay help and account-access pages.',
     keyPoints: [
@@ -421,6 +426,7 @@ const pageEnhancements = {
     ],
   },
   'how-to-use-showpay.html': {
+    queries: ['How to use ShowPay', 'ShowPay login', 'ShowPay app'],
     summary: 'Open the correct ShowPay login, sign in with your own account details and follow the current labels and instructions displayed in the dashboard.',
     audience: 'First-time users who need a simple orientation to ShowPay login, navigation and account help.',
     keyPoints: [
@@ -434,6 +440,7 @@ const pageEnhancements = {
     ],
   },
   'how-to-deposit-showpay.html': {
+    queries: ['How to deposit in ShowPay', 'ShowPay deposit', 'ShowPay login'],
     summary: 'Use a deposit option only when it is visible in your signed-in ShowPay account, then verify the method, amount and recipient details before confirming.',
     audience: 'Users who want a general checklist before using an available ShowPay deposit option.',
     keyPoints: [
@@ -447,6 +454,7 @@ const pageEnhancements = {
     ],
   },
   'how-to-deposit-usdt-showpay.html': {
+    queries: ['How to deposit USDT in ShowPay', 'ShowPay USDT deposit', 'ShowPay USDT'],
     summary: 'Before a ShowPay USDT deposit, match the supported network, verify the complete address and retain the transaction reference until the account status updates.',
     audience: 'Users preparing a USDT deposit through an option displayed in their ShowPay account.',
     keyPoints: [
@@ -460,6 +468,7 @@ const pageEnhancements = {
     ],
   },
   'showpay-password-help.html': {
+    queries: ['ShowPay password', 'ShowPay password reset', 'ShowPay login help'],
     summary: 'Open password recovery from the main ShowPay login, follow the displayed recovery flow and never share a password, OTP or MPIN with another person.',
     audience: 'Users who forgot a ShowPay password, cannot sign in or want safer account-recovery guidance.',
     keyPoints: [
@@ -486,6 +495,11 @@ function enhancementHtml(page) {
       <section>
         <h2>Who is this guide for?</h2>
         <p>${item.audience}</p>
+        <div class="topic-box" aria-labelledby="topics-covered">
+          <h2 id="topics-covered">Search topics covered</h2>
+          <p>This guide directly covers these related ShowPay searches:</p>
+          <ul class="topic-list">${item.queries.map((query) => `<li>${query}</li>`).join('')}</ul>
+        </div>
         <h2>Key checks</h2>
         <ul>${item.keyPoints.map((point) => `<li>${point}</li>`).join('')}</ul>
       </section>
@@ -553,6 +567,10 @@ const styles = `
       .answer-card h2 { margin: .25rem 0 .6rem; }
       .faq h3 { padding: 18px 20px 8px; margin: 14px 0 0; border: 1px solid var(--line); border-bottom: 0; border-radius: 15px 15px 0 0; background: #fff; }
       .faq h3 + p { margin: 0; padding: 0 20px 18px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 15px 15px; color: #526174; }
+      .topic-box { margin: 24px 0; padding: 20px; border: 1px solid #dbeafe; border-radius: 18px; background: #f8fbff; }
+      .topic-box h2 { margin-top: 0; }
+      .topic-list { display: flex; flex-wrap: wrap; gap: 9px; margin: 14px 0 0; padding: 0 !important; list-style: none; }
+      .topic-list li { margin: 0 !important; padding: 7px 11px; border: 1px solid #cbdcf5; border-radius: 999px; background: #fff; color: var(--navy); font-size: .88rem; font-weight: 700; }
       .guide-nav { margin: 28px 0; padding: clamp(22px, 4vw, 34px); border-radius: 24px; background: var(--wash); }
       .guide-nav h2 { margin-top: 0; }
       .link-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -663,6 +681,10 @@ for (const page of pages) {
       acceptedAnswer: { '@type': 'Answer', text: answer },
     })),
   };
+  const pageSchema = {
+    ...page.schema,
+    keywords: (pageEnhancements[page.filename]?.queries || []).join(', '),
+  };
   const html = `<!doctype html>
 <html lang="en">
   <head>
@@ -684,7 +706,7 @@ for (const page of pages) {
     <meta name="twitter:title" content="${page.title}" />
     <meta name="twitter:description" content="${page.description}" />
     <meta name="twitter:image" content="${socialImage}" />
-    <script type="application/ld+json">${JSON.stringify(page.schema)}</script>
+    <script type="application/ld+json">${JSON.stringify(pageSchema)}</script>
     <script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>
     <script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
     <style>${styles}</style>
