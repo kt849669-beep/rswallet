@@ -94,8 +94,37 @@ for (const filename of publicPages) {
     `${label}: canonical mismatch`,
   );
   expect(/<h1\b[^>]*>[^<]+<\/h1>/i.test(html), `${label}: missing H1`);
+  expect((html.match(/<h1\b/gi) ?? []).length === 1, `${label}: must contain exactly one H1`);
+  expect(
+    /class="[^"]*hero-login[^"]*" href="\/">ShowPay Login<\/a>/.test(html),
+    `${label}: missing prominent ShowPay Login link`,
+  );
+  expect(html.includes('alt="ShowPay logo'), `${label}: missing ShowPay logo alt text`);
+  expect(
+    html.includes('href="https://app-web.showpay-web.com/regist?code=2invite5p6">Register Now</a>'),
+    `${label}: missing Register Now CTA`,
+  );
+  expect(
+    html.includes('href="https://t.me/showpayofficial00"'),
+    `${label}: missing Telegram CTA`,
+  );
+  for (const relatedPage of publicPages) {
+    expect(
+      html.includes(`href="/${relatedPage}"`),
+      `${label}: missing internal link to ${relatedPage}`,
+    );
+  }
   validateJsonLd(html, label);
 }
+
+const usdtGuide = read('public/showpay-usdt.html');
+for (const calculatorId of ['usdtAmount', 'usdtRange', 'inrRate', 'inrOutput', 'rateBadge']) {
+  expect(usdtGuide.includes(`id="${calculatorId}"`), `USDT calculator: missing ${calculatorId}`);
+}
+expect(
+  usdtGuide.includes("new Intl.NumberFormat('en-IN'"),
+  'USDT calculator: missing INR number formatting',
+);
 
 expect(fs.statSync(path.join(root, 'public', 'showpay-logo.png')).size > 0, 'public logo is empty');
 
