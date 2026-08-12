@@ -1,29 +1,6 @@
 {
-  "version": 2,
+  "framework": "nextjs",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": null,
-  "redirects": [
-    {
-      "source": "/login",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/user-app/pages/login.html"
-    },
-    {
-      "source": "/home",
-      "destination": "/user-app/pages/home.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin-app/pages/login.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -41,10 +18,6 @@
           "value": "SAMEORIGIN"
         },
         {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
         },
@@ -52,14 +25,11 @@
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=()"
         },
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ujzupmmvfrhpwziudydr.supabase.co https://*.supabase.co; media-src 'self' https:; frame-ancestors 'none';"
-        }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; media-src 'self' https:; frame-ancestors 'none';" }
       ]
     },
     {
-      "source": "/assets/(.*)",
+      "source": "/:path*.(png|jpg|jpeg|webp|svg|ico)",
       "headers": [
         {
           "key": "Cache-Control",

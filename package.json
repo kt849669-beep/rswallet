@@ -1,20 +1,25 @@
 {
-  "name": "showpay-html",
+  "name": "toppay-fullstack-react",
   "private": true,
   "version": "3.0.0",
   "type": "module",
   "scripts": {
     "generate:seo": "node seo-generator.cjs",
-    "prebuild": "npm run generate:seo",
-    "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 3000",
     "test:seo": "node tests/seo-audit.mjs",
     "test:seo-monitor": "node --test --test-isolation=none seo-monitor/tests/monitor.test.mjs",
     "monitor:seo": "node seo-monitor/run.mjs"
   },
   "dependencies": {
-    "vite": "^6.2.3"
+    "next": "^16.3.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "typescript": "7.0.2"
+  }
 }
