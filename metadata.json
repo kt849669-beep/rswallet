@@ -1,5 +1,5 @@
 {
-  "name": "ShowPay",
+  "name": "RsWallet",
   "description": "A payment app clone with user and admin panels.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

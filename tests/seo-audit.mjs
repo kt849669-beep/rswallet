@@ -3,31 +3,31 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const domain = 'https://app-showpay.in';
+const domain = 'https://rswallet.vercel.app';
 const publicPages = [
-  'about-showpay.html',
-  'showpay-apk.html',
-  'showpay-support.html',
-  'showpay-usdt.html',
-  'showpay-guide.html',
-  'how-to-use-showpay.html',
-  'how-to-deposit-showpay.html',
-  'how-to-deposit-usdt-showpay.html',
-  'showpay-password-help.html',
+  'about-rswallet.html',
+  'rswallet-apk.html',
+  'rswallet-support.html',
+  'rswallet-usdt.html',
+  'rswallet-guide.html',
+  'how-to-use-rswallet.html',
+  'how-to-deposit-rswallet.html',
+  'how-to-deposit-usdt-rswallet.html',
+  'rswallet-password-help.html',
 ];
 
 const failures = [];
 
 const targetQueries = {
-  'about-showpay.html': ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login'],
-  'showpay-apk.html': ['ShowPay app', 'ShowPay APK', 'Show pay app', 'ShowPay login'],
-  'showpay-support.html': ['ShowPay support', 'ShowPay login help', 'ShowPay password'],
-  'showpay-usdt.html': ['ShowPay USDT', 'ShowPay USDT deposit', 'ShowPay USDT withdrawal'],
-  'showpay-guide.html': ['ShowPay', 'Showpay', 'Show pay', 'ShowPay login', 'ShowPay app', 'ShowPay APK', 'ShowPay USDT', 'ShowPay password'],
-  'how-to-use-showpay.html': ['How to use ShowPay', 'ShowPay login', 'ShowPay app'],
-  'how-to-deposit-showpay.html': ['How to deposit in ShowPay', 'ShowPay deposit', 'ShowPay login'],
-  'how-to-deposit-usdt-showpay.html': ['How to deposit USDT in ShowPay', 'ShowPay USDT deposit', 'ShowPay USDT'],
-  'showpay-password-help.html': ['ShowPay password', 'ShowPay password reset', 'ShowPay login help'],
+  'about-rswallet.html': ['RsWallet', 'Rswallet', 'Rswallet', 'RsWallet login'],
+  'rswallet-apk.html': ['RsWallet app', 'RsWallet APK', 'Rswallet app', 'RsWallet login'],
+  'rswallet-support.html': ['RsWallet support', 'RsWallet login help', 'RsWallet password'],
+  'rswallet-usdt.html': ['RsWallet USDT', 'RsWallet USDT deposit', 'RsWallet USDT withdrawal'],
+  'rswallet-guide.html': ['RsWallet', 'Rswallet', 'Rswallet', 'RsWallet login', 'RsWallet app', 'RsWallet APK', 'RsWallet USDT', 'RsWallet password'],
+  'how-to-use-rswallet.html': ['How to use RsWallet', 'RsWallet login', 'RsWallet app'],
+  'how-to-deposit-rswallet.html': ['How to deposit in RsWallet', 'RsWallet deposit', 'RsWallet login'],
+  'how-to-deposit-usdt-rswallet.html': ['How to deposit USDT in RsWallet', 'RsWallet USDT deposit', 'RsWallet USDT'],
+  'rswallet-password-help.html': ['RsWallet password', 'RsWallet password reset', 'RsWallet login help'],
 };
 
 function read(relativePath) {
@@ -79,7 +79,7 @@ expect(
   headValue(login, 'meta', 'name', 'description', 'content').length >= 70,
   'login: description is missing or too short',
 );
-expect(!login.includes('/assets/showpay-og-image.jpg'), 'login: references missing OG image');
+expect(!login.includes('/assets/rswallet-og-image.jpg'), 'login: references missing OG image');
 expect(!login.includes('/assets/logo.png'), 'login: references missing logo');
 validateJsonLd(login, 'login');
 
@@ -108,16 +108,16 @@ for (const filename of publicPages) {
   expect(/<h1\b[^>]*>[^<]+<\/h1>/i.test(html), `${label}: missing H1`);
   expect((html.match(/<h1\b/gi) ?? []).length === 1, `${label}: must contain exactly one H1`);
   expect(
-    /class="[^"]*hero-login[^"]*" href="\/">ShowPay Login<\/a>/.test(html),
-    `${label}: missing prominent ShowPay Login link`,
+    /class="[^"]*hero-login[^"]*" href="\/">RsWallet Login<\/a>/.test(html),
+    `${label}: missing prominent RsWallet Login link`,
   );
-  expect(html.includes('alt="ShowPay logo'), `${label}: missing ShowPay logo alt text`);
+  expect(html.includes('alt="RsWallet logo'), `${label}: missing RsWallet logo alt text`);
   expect(
-    html.includes('href="https://app-web.showpay-web.com/regist?code=2invite5p6">Register Now</a>'),
+    html.includes('href="https://rswallet.vercel.app/regist?code=2invite5p6">Register Now</a>'),
     `${label}: missing Register Now CTA`,
   );
   expect(
-    html.includes('href="https://t.me/showpayofficial00"'),
+    html.includes('href="https://t.me/rswalletofficial00"'),
     `${label}: missing Telegram CTA`,
   );
   for (const relatedPage of publicPages) {
@@ -136,7 +136,7 @@ for (const filename of publicPages) {
   validateJsonLd(html, label);
 }
 
-const usdtGuide = read('public/showpay-usdt.html');
+const usdtGuide = read('public/rswallet-usdt.html');
 for (const calculatorId of ['usdtAmount', 'usdtRange', 'inrRate', 'inrOutput', 'rateBadge']) {
   expect(usdtGuide.includes(`id="${calculatorId}"`), `USDT calculator: missing ${calculatorId}`);
 }
@@ -145,7 +145,7 @@ expect(
   'USDT calculator: missing INR number formatting',
 );
 
-expect(fs.statSync(path.join(root, 'public', 'showpay-logo.png')).size > 0, 'public logo is empty');
+expect(fs.statSync(path.join(root, 'public', 'rswallet-logo.png')).size > 0, 'public logo is empty');
 
 const sitemap = read('public/sitemap.xml');
 const sitemapLocations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
@@ -156,12 +156,12 @@ expect(
 );
 expect(!sitemap.includes('/user-app/'), 'sitemap: internal app URL must not be submitted');
 expect(
-  read('public/showpay-guide.html').includes('alternateName'),
-  'guide hub: missing ShowPay alternate-name entity signal',
+  read('public/rswallet-guide.html').includes('alternateName'),
+  'guide hub: missing RsWallet alternate-name entity signal',
 );
 for (const filename of publicPages) {
   const html = read(`public/${filename}`);
-  expect(html.includes('href="/showpay-guide.html"'), `${filename}: missing guide hub link`);
+  expect(html.includes('href="/rswallet-guide.html"'), `${filename}: missing guide hub link`);
 }
 
 const robots = read('public/robots.txt');

@@ -12,7 +12,7 @@ export default function AdminLogin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'admin@showpay.com' && password === 'admin@0123') {
+    if (email === 'admin@rswallet.com' && password === 'admin@0123') {
       setIsAdmin(true);
       navigate('/admin/dashboard');
     } else {
@@ -28,7 +28,7 @@ export default function AdminLogin() {
             <ShieldCheck className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Admin Portal</h1>
-          <p className="text-blue-200 mt-2 text-sm">Secure access to ShowPay controls</p>
+          <p className="text-blue-200 mt-2 text-sm">Secure access to RsWallet controls</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -41,7 +41,7 @@ export default function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-white/10 bg-black/20 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 transition-all outline-none placeholder-white/30"
-              placeholder="admin@showpay.com"
+              placeholder="admin@rswallet.com"
               required
             />
           </div>

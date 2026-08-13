@@ -17,9 +17,9 @@ export default function UserDashboard() {
 
   useEffect(() => {
     // Post login sequence logic
-    const justLoggedIn = sessionStorage.getItem('showpay_just_logged_in');
+    const justLoggedIn = sessionStorage.getItem('rswallet_just_logged_in');
     if (justLoggedIn) {
-      sessionStorage.removeItem('showpay_just_logged_in');
+      sessionStorage.removeItem('rswallet_just_logged_in');
       setShowSuccessDialog(true);
     }
   }, []);

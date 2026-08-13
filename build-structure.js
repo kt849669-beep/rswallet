@@ -3,7 +3,7 @@ import path from 'path';
 
 const structure = {
   'public': ['favicon.ico', 'manifest.json', 'robots.txt', 'offline.html'],
-  'assets/logo': ['showpay-logo.png', 'admin-logo.png', 'favicon.png'],
+  'assets/logo': ['rswallet-logo.png', 'admin-logo.png', 'favicon.png'],
   'assets/icons': ['home.svg', 'deposit.svg', 'upi.svg', 'team.svg', 'profile.svg', 'logout.svg', 'search.svg', 'delete.svg', 'restore.svg', 'upload.svg', 'telegram.svg', 'play.svg', 'pdf.svg', 'gmail.svg'],
   'assets/images': ['login-bg.png', 'empty.png', 'banner-placeholder.png', 'slider-placeholder.png', 'telegram-popup.png'],
   'assets/fonts': [],

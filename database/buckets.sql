@@ -1,5 +1,5 @@
 -- ============================================
--- ShowPay 3.0 - Storage Buckets
+-- RsWallet 3.0 - Storage Buckets
 -- Run this in Supabase SQL Editor
 -- ============================================
 

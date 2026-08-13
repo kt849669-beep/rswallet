@@ -14,7 +14,7 @@ if (!token || !repository) {
 }
 
 const [owner, repo] = repository.split('/');
-const title = '[SEO Monitor] app-showpay.in alert';
+const title = '[SEO Monitor] rswallet.vercel.app alert';
 const marker = `<!-- seo-monitor-fingerprint:${report.alertFingerprint} -->`;
 
 async function api(endpoint, options = {}) {

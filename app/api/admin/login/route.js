@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseRest } from '@/lib/supabase-rest';
+import { createAdminSessionToken } from '@/lib/admin-auth';
 
 export async function POST(request) {
   const { email, password } = await request.json();
@@ -12,9 +13,9 @@ export async function POST(request) {
   const fallbackPassword = process.env.ADMIN_FALLBACK_PASSWORD;
   valid ||= Boolean(fallbackEmail && fallbackPassword && email === fallbackEmail && password === fallbackPassword);
   if (!valid) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  const token = crypto.randomUUID();
+  const token = await createAdminSessionToken(email);
   await supabaseRest('admin_sessions', { method: 'POST', body: JSON.stringify({ token, device_info: request.headers.get('user-agent') || 'Next.js' }) }).catch(() => null);
   const response = NextResponse.json({ ok: true });
-  response.cookies.set('showpay_admin_session', token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 * 12 });
+  response.cookies.set('rswallet_admin_session', token, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 * 12 });
   return response;
 }

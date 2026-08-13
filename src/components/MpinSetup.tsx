@@ -43,7 +43,7 @@ export default function MpinSetup() {
       }
 
       setUser(data.user);
-      sessionStorage.setItem('showpay_just_logged_in', 'true');
+      sessionStorage.setItem('rswallet_just_logged_in', 'true');
       navigate('/');
     } catch (err: any) {
       setError(err.message);

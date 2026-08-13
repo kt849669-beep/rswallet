@@ -1,5 +1,5 @@
 -- ============================================
--- ShowPay 3.0 - Triggers
+-- RsWallet 3.0 - Triggers
 -- Run this AFTER schema.sql in Supabase SQL Editor
 -- ============================================
 

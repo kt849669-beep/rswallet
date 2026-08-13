@@ -3,4 +3,4 @@ Disallow: /admin
 Disallow: /admin-app/
 Allow: /
 
-Sitemap: https://app-showpay.in/sitemap.xml
+Sitemap: https://rswallet.vercel.app/sitemap.xml

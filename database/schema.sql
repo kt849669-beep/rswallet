@@ -1,5 +1,5 @@
 -- ============================================
--- ShowPay 3.0 - Database Schema
+-- RsWallet 3.0 - Database Schema
 -- Run this in Supabase SQL Editor
 -- ============================================
 
@@ -95,8 +95,8 @@ CREATE TABLE IF NOT EXISTS notifications (
 -- Stores admin profile/credentials
 CREATE TABLE IF NOT EXISTS admin_settings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  admin_email TEXT DEFAULT 'admin@showpay.com',
+  admin_email TEXT DEFAULT 'admin@rswallet.com',
   admin_password TEXT DEFAULT 'admin@0123',
-  admin_name TEXT DEFAULT 'ShowPay Admin',
+  admin_name TEXT DEFAULT 'RsWallet Admin',
   updated_at TIMESTAMPTZ DEFAULT now()
 );

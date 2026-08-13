@@ -4,7 +4,7 @@ import { supabase } from "./config/supabase.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1. Check Session
-  const sessionStr = sessionStorage.getItem("showpay_session");
+  const sessionStr = sessionStorage.getItem("rswallet_session");
   if (!sessionStr) {
     window.location.href = "/login";
     return;
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ======================================
   function logout() {
     // Session Clear
-    sessionStorage.removeItem("showpay_session");
+    sessionStorage.removeItem("rswallet_session");
     // Redirect to Login Page
     window.location.href = "../pages/login.html";
   }

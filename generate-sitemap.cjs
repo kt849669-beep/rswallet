@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const domain = 'https://app-showpay.in';
+const domain = 'https://rswallet.vercel.app';
 const sitemapFile = path.join(__dirname, 'public', 'sitemap.xml');
 
 const urls = [
@@ -12,56 +12,56 @@ const urls = [
     priority: '1.0',
   },
   {
-    loc: `${domain}/about-showpay.html`,
-    source: path.join(__dirname, 'public', 'about-showpay.html'),
+    loc: `${domain}/about-rswallet.html`,
+    source: path.join(__dirname, 'public', 'about-rswallet.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },
   {
-    loc: `${domain}/showpay-apk.html`,
-    source: path.join(__dirname, 'public', 'showpay-apk.html'),
+    loc: `${domain}/rswallet-apk.html`,
+    source: path.join(__dirname, 'public', 'rswallet-apk.html'),
     changefreq: 'monthly',
     priority: '0.8',
   },
   {
-    loc: `${domain}/showpay-support.html`,
-    source: path.join(__dirname, 'public', 'showpay-support.html'),
+    loc: `${domain}/rswallet-support.html`,
+    source: path.join(__dirname, 'public', 'rswallet-support.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },
   {
-    loc: `${domain}/showpay-usdt.html`,
-    source: path.join(__dirname, 'public', 'showpay-usdt.html'),
+    loc: `${domain}/rswallet-usdt.html`,
+    source: path.join(__dirname, 'public', 'rswallet-usdt.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },
   {
-    loc: `${domain}/showpay-guide.html`,
-    source: path.join(__dirname, 'public', 'showpay-guide.html'),
+    loc: `${domain}/rswallet-guide.html`,
+    source: path.join(__dirname, 'public', 'rswallet-guide.html'),
     changefreq: 'monthly',
     priority: '0.8',
   },
   {
-    loc: `${domain}/how-to-use-showpay.html`,
-    source: path.join(__dirname, 'public', 'how-to-use-showpay.html'),
+    loc: `${domain}/how-to-use-rswallet.html`,
+    source: path.join(__dirname, 'public', 'how-to-use-rswallet.html'),
     changefreq: 'monthly',
     priority: '0.8',
   },
   {
-    loc: `${domain}/how-to-deposit-showpay.html`,
-    source: path.join(__dirname, 'public', 'how-to-deposit-showpay.html'),
+    loc: `${domain}/how-to-deposit-rswallet.html`,
+    source: path.join(__dirname, 'public', 'how-to-deposit-rswallet.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },
   {
-    loc: `${domain}/how-to-deposit-usdt-showpay.html`,
-    source: path.join(__dirname, 'public', 'how-to-deposit-usdt-showpay.html'),
+    loc: `${domain}/how-to-deposit-usdt-rswallet.html`,
+    source: path.join(__dirname, 'public', 'how-to-deposit-usdt-rswallet.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },
   {
-    loc: `${domain}/showpay-password-help.html`,
-    source: path.join(__dirname, 'public', 'showpay-password-help.html'),
+    loc: `${domain}/rswallet-password-help.html`,
+    source: path.join(__dirname, 'public', 'rswallet-password-help.html'),
     changefreq: 'monthly',
     priority: '0.7',
   },

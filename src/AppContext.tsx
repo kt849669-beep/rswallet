@@ -14,27 +14,27 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('showpay_user');
+    const saved = localStorage.getItem('rswallet_user');
     return saved ? JSON.parse(saved) : null;
   });
   const [isAdmin, setIsAdmin] = useState<boolean>(() => {
-    return localStorage.getItem('showpay_admin') === 'true';
+    return localStorage.getItem('rswallet_admin') === 'true';
   });
   const [appState, setAppState] = useState<AppState | null>(null);
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('showpay_user', JSON.stringify(user));
+      localStorage.setItem('rswallet_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('showpay_user');
+      localStorage.removeItem('rswallet_user');
     }
   }, [user]);
 
   useEffect(() => {
     if (isAdmin) {
-      localStorage.setItem('showpay_admin', 'true');
+      localStorage.setItem('rswallet_admin', 'true');
     } else {
-      localStorage.removeItem('showpay_admin');
+      localStorage.removeItem('rswallet_admin');
     }
   }, [isAdmin]);
 

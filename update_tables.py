@@ -1,7 +1,7 @@
 import os
 import glob
 
-pages_dir = r"c:\Users\DELL\OneDrive\Desktop\New folder\showpay3.0\admin-app\pages"
+pages_dir = r"c:\Users\DELL\OneDrive\Desktop\New folder\rswallet3.0\admin-app\pages"
 html_files = glob.glob(os.path.join(pages_dir, "*.html"))
 
 for file_path in html_files:

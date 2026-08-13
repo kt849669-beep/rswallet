@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <h3 style="font-size: 18px; margin-bottom: 12px; font-weight: 600; color: #1f2937;">Update Request Already Received</h3>
                 <p style="font-size: 14px; color: #4b5563; margin-bottom: 16px; line-height: 1.5;">Please wait some time. You can use another link:</p>
-                <a href="#" id="telegramLimitLink" style="display: inline-block; padding: 10px 16px; background: #e0e7ff; color: #4f46e5; border-radius: 8px; text-decoration: none; font-weight: 600; word-break: break-all;">app-web.showpay-web.com</a>
+                <a href="#" id="telegramLimitLink" style="display: inline-block; padding: 10px 16px; background: #e0e7ff; color: #4f46e5; border-radius: 8px; text-decoration: none; font-weight: 600; word-break: break-all;">RsWallet support</a>
               </div>
              `;
              if (window.lucide) {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Save session
       sessionStorage.setItem(
-        "showpay_session",
+        "rswallet_session",
         JSON.stringify({
           userId: user.id,
           mobile: user.mobile,

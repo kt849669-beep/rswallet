@@ -42,7 +42,7 @@ export default function UserLogin() {
         navigate('/setup-mpin');
       } else {
         // Flag for showing success popup on dashboard
-        sessionStorage.setItem('showpay_just_logged_in', 'true');
+        sessionStorage.setItem('rswallet_just_logged_in', 'true');
         navigate('/');
       }
     } catch (err: any) {
@@ -61,7 +61,7 @@ export default function UserLogin() {
               <Wallet className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold">Welcome to ShowPay</h1>
+          <h1 className="text-2xl font-bold">Welcome to RsWallet</h1>
           <p className="text-blue-100 mt-2 text-sm">Login or create a new account</p>
         </div>
         

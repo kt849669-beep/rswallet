@@ -1,16 +1,16 @@
 import crypto from 'node:crypto';
 
-export const DEFAULT_SITE_URL = 'https://app-showpay.in/';
+export const DEFAULT_SITE_URL = 'https://rswallet.vercel.app/';
 export const SEED_QUERIES = [
-  'showpay',
-  'showpay login',
-  'show pay',
-  'show pay login',
-  'showpay app',
-  'showpay apk',
+  'rswallet',
+  'rswallet login',
+  'rswallet',
+  'rswallet login',
+  'rswallet app',
+  'rswallet apk',
 ];
 
-const USER_AGENT = 'ShowPaySEOAgent/1.0 (+https://app-showpay.in/)';
+const USER_AGENT = 'RsWalletSEOAgent/1.0 (+https://rswallet.vercel.app/)';
 
 export function isoDate(date) {
   return date.toISOString().slice(0, 10);

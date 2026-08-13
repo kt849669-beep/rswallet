@@ -21,7 +21,7 @@ const layout = (title, script, content) => `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title} - ShowPay Admin</title>
+    <title>${title} - RsWallet Admin</title>
     <link rel="stylesheet" href="../css/admin.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -29,7 +29,7 @@ const layout = (title, script, content) => `<!DOCTYPE html>
 <body>
     <div class="dashboard-layout">
         <aside class="sidebar">
-            <div class="sidebar-header">ShowPay Admin</div>
+            <div class="sidebar-header">RsWallet Admin</div>
             <nav class="nav-links" style="overflow-y: auto;">
                 ${Object.entries(pages).map(([id, page]) => `<a href="${id}.html" class="nav-link ${title === page.title ? 'active' : ''}"><i data-lucide="circle"></i> ${page.title}</a>`).join('\n                ')}
                 <button class="nav-link" id="logoutBtn" style="color:#ef4444; margin-top: auto;"><i data-lucide="log-out"></i> Logout</button>

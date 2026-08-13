@@ -1,4 +1,4 @@
-name: ShowPay Hourly SEO Monitor
+name: RsWallet Hourly SEO Monitor
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: showpay-hourly-seo-monitor
+  group: rswallet-hourly-seo-monitor
   cancel-in-progress: false
 
 jobs:
@@ -38,13 +38,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/236413037487/locations/global/workloadIdentityPools/github-pool/providers/github-provider
-          service_account: showpay-seo-agent@showpay-seo-monitor.iam.gserviceaccount.com
+          service_account: rswallet-seo-agent@rswallet-seo-monitor.iam.gserviceaccount.com
           token_format: access_token
           access_token_scopes: https://www.googleapis.com/auth/webmasters.readonly
 
       - name: Run read-only SEO monitor
         env:
-          SEO_SITE_URL: https://app-showpay.in/
+          SEO_SITE_URL: https://rswallet.vercel.app/
           GSC_ACCESS_TOKEN: ${{ steps.google_auth.outputs.access_token }}
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
         run: node seo-monitor/run.mjs

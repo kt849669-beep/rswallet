@@ -56,7 +56,7 @@ const report = {
 };
 
 const lines = [
-  `# ShowPay hourly SEO report`,
+  `# RsWallet hourly SEO report`,
   '',
   `- Generated: ${generatedAt}`,
   `- Status: **${report.status.toUpperCase()}**`,

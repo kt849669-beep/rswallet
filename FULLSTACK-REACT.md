@@ -1,8 +1,8 @@
-# TopPay Full-Stack React Clone
+# RsWallet Full-Stack React Clone
 
 This folder started from the exact GitHub branch that matches the live Vercel SEO pages:
 
-- Repository: `kt849669-beep/showpay3.0`
+- Repository: `kt849669-beep/rswallet3.0`
 - Source branch: `codex/advanced-seo-agent-20260811`
 - Source commit: `bb31ee5a0b206a78421798d9f5f07e8b330a0a74`
 
@@ -16,7 +16,7 @@ This folder started from the exact GitHub branch that matches the live Vercel SE
 
 ## Preserved workflow
 
-1. `/` displays the mobile ShowPay login.
+1. `/` displays the mobile RsWallet login.
 2. A valid first login creates/updates the Supabase user and opens `/home`.
 3. The home screen loads live slider, video and Telegram settings.
 4. The mandatory six-digit MPIN is saved to the same `users` table.

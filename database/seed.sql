@@ -1,5 +1,5 @@
 -- ============================================
--- ShowPay 3.0 - Seed Data
+-- RsWallet 3.0 - Seed Data
 -- Run this AFTER schema.sql in Supabase SQL Editor
 -- ============================================
 
@@ -19,9 +19,9 @@ ON CONFLICT DO NOTHING;
 
 -- Insert default admin settings
 INSERT INTO admin_settings (admin_email, admin_password, admin_name)
-VALUES ('admin@showpay.com', 'admin@0123', 'ShowPay Admin')
+VALUES ('admin@rswallet.com', 'admin@0123', 'RsWallet Admin')
 ON CONFLICT DO NOTHING;
 
 -- Insert initial activity log
 INSERT INTO activity_logs (action, details)
-VALUES ('System Initialized', 'ShowPay 3.0 database setup completed');
+VALUES ('System Initialized', 'RsWallet 3.0 database setup completed');

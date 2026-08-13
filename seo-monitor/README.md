@@ -1,6 +1,6 @@
-# ShowPay hourly SEO monitor
+# RsWallet hourly SEO monitor
 
-This is a read-only cloud monitor for `https://app-showpay.in/`. GitHub Actions runs it at minute 17 of every hour, so a local computer or the Codex desktop app does not need to stay online.
+This is a read-only cloud monitor for `https://rswallet.vercel.app/`. GitHub Actions runs it at minute 17 of every hour, so a local computer or the Codex desktop app does not need to stay online.
 
 ## Checks
 
@@ -9,7 +9,7 @@ This is a read-only cloud monitor for `https://app-showpay.in/`. GitHub Actions 
 - all sitemap URLs and same-origin internal links
 - Search Console clicks, impressions, CTR and average position for equal seven-day periods
 - India and Mobile segments
-- case-insensitive exact seed queries: ShowPay, ShowPay login, Show pay, Show pay login, ShowPay app and ShowPay apk
+- case-insensitive exact seed queries: RsWallet, RsWallet login, Rswallet, Rswallet login, RsWallet app and RsWallet apk
 - Search Console sitemap errors and URL Inspection indexing/crawl/canonical/mobile results
 - alert thresholds for 30% traffic drops, two-position regressions, indexing failures, sitemap failures, blocked crawling, 4xx/5xx and downtime
 
@@ -22,7 +22,7 @@ Public technical checks run without credentials. The preferred Search Console co
 - `GCP_WORKLOAD_IDENTITY_PROVIDER`
 - `GSC_SERVICE_ACCOUNT_EMAIL`
 
-The identity provider is restricted to `kt849669-beep/showpay3.0`, and the service-account email is added only as a restricted user of the exact Search Console property `https://app-showpay.in/`. The workflow requests a short-lived token with the read-only `https://www.googleapis.com/auth/webmasters.readonly` scope.
+The identity provider is restricted to `kt849669-beep/rswallet3.0`, and the service-account email is added only as a restricted user of the exact Search Console property `https://rswallet.vercel.app/`. The workflow requests a short-lived token with the read-only `https://www.googleapis.com/auth/webmasters.readonly` scope.
 
 `GSC_SERVICE_ACCOUNT_JSON` remains an optional compatibility fallback, but the production setup should use the keyless connection so no long-lived Google private key is stored in GitHub.
 

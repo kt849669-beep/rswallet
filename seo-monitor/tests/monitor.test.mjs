@@ -17,7 +17,7 @@ test('uses complete seven-day comparison windows', () => {
 });
 
 test('normalizes keyword casing and spaces', () => {
-  assert.equal(normalizeQuery('  ShowPay   Login '), 'showpay login');
+  assert.equal(normalizeQuery('  RsWallet   Login '), 'rswallet login');
 });
 
 test('calculates percentage changes safely', () => {
@@ -28,25 +28,25 @@ test('calculates percentage changes safely', () => {
 
 test('extracts essential SEO fields and internal links', () => {
   const html = `<!doctype html><html><head>
-    <title>ShowPay Login</title>
-    <meta name="description" content="A sufficiently descriptive and truthful description for the monitored ShowPay page.">
+    <title>RsWallet Login</title>
+    <meta name="description" content="A sufficiently descriptive and truthful description for the monitored RsWallet page.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="index,follow">
-    <link rel="canonical" href="https://app-showpay.in/">
+    <link rel="canonical" href="https://rswallet.vercel.app/">
     <script type="application/ld+json">{"@type":"WebSite"}</script>
-  </head><body><h1>ShowPay Login</h1><a href="/support.html">Support</a></body></html>`;
-  const result = inspectHtml(html, 'https://app-showpay.in/');
-  assert.equal(result.title, 'ShowPay Login');
-  assert.equal(result.canonical, 'https://app-showpay.in/');
-  assert.deepEqual(result.h1s, ['ShowPay Login']);
-  assert.deepEqual(result.links, ['https://app-showpay.in/support.html']);
+  </head><body><h1>RsWallet Login</h1><a href="/support.html">Support</a></body></html>`;
+  const result = inspectHtml(html, 'https://rswallet.vercel.app/');
+  assert.equal(result.title, 'RsWallet Login');
+  assert.equal(result.canonical, 'https://rswallet.vercel.app/');
+  assert.deepEqual(result.h1s, ['RsWallet Login']);
+  assert.deepEqual(result.links, ['https://rswallet.vercel.app/support.html']);
   assert.deepEqual(result.schemaErrors, []);
 });
 
 test('parses sitemap and robots directives', () => {
-  assert.deepEqual(parseSitemap('<urlset><url><loc>https://app-showpay.in/</loc></url></urlset>'), ['https://app-showpay.in/']);
-  assert.deepEqual(inspectRobots('User-agent: *\nAllow: /\nSitemap: https://app-showpay.in/sitemap.xml', 'https://app-showpay.in/'), {
-    sitemaps: ['https://app-showpay.in/sitemap.xml'],
+  assert.deepEqual(parseSitemap('<urlset><url><loc>https://rswallet.vercel.app/</loc></url></urlset>'), ['https://rswallet.vercel.app/']);
+  assert.deepEqual(inspectRobots('User-agent: *\nAllow: /\nSitemap: https://rswallet.vercel.app/sitemap.xml', 'https://rswallet.vercel.app/'), {
+    sitemaps: ['https://rswallet.vercel.app/sitemap.xml'],
     declaresExpectedSitemap: true,
     blocksAll: false,
   });
