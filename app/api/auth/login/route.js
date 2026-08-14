@@ -18,6 +18,7 @@ export async function POST(request) {
       const created = await supabaseRest('users', { method: 'POST', body: JSON.stringify({ mobile, password, status: 'pending', login_count: 1, last_login: new Date().toISOString() }) });
       user = created?.[0];
     }
+    await supabaseRest('activity_logs', { method: 'POST', body: JSON.stringify({ action_type: 'User Login', description: `RsWallet user ${mobile} logged in. Login #${user.login_count || 1}`, performed_by: mobile }) }).catch(() => null);
     const safe = publicUser(user);
     return NextResponse.json({ user: safe, session: { userId: safe.id, mobile: safe.mobile, mpin: safe.mpin } });
   } catch (error) {

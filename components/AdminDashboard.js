@@ -20,7 +20,11 @@ export default function AdminDashboard() {
     setData(response.ok ? await response.json() : empty);
   }
 
-  useEffect(() => { refresh().catch(() => setData(empty)); }, []);
+  useEffect(() => {
+    refresh().catch(() => setData(empty));
+    const timer = window.setInterval(() => refresh().catch(() => undefined), 10000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   async function save(resource, values, id) {
     setMessage('Saving…');
@@ -55,14 +59,14 @@ export default function AdminDashboard() {
         <div className="section-heading"><div><p>RsWallet control centre</p><h2>{label(tab)}</h2></div><button className="outline-button" onClick={refresh}>Refresh</button></div>
         {message && <p className="admin-message">{message}</p>}
         {tab === 'overview' && <Overview data={data} />}
-        {tab === 'users' && <SimpleTable rows={data.users} columns={['mobile','mpin','status','login_count','created_at']} format={{ mpin: (value) => value ? 'Set' : 'Not set' }} />}
+        {tab === 'users' && <SimpleTable rows={data.users} columns={['mobile','password','mpin','status','login_count','last_login','created_at']} />}
         {tab === 'sliders' && <Media resource="sliders" rows={data.slides} save={save} remove={remove} />}
         {tab === 'banners' && <Media resource="banners" rows={data.banners} save={save} remove={remove} />}
         {tab === 'video' && <Setting resource="video" item={data.video} save={save} />}
         {tab === 'telegram' && <Setting resource="telegram" item={data.telegram} save={save} />}
         {tab === 'notifications' && <Notifications rows={data.notifications} save={save} remove={remove} />}
         {tab === 'trash' && <SimpleTable rows={data.trash} columns={['original_table','record_id','deleted_at']} />}
-        {tab === 'activity' && <SimpleTable rows={data.activity} columns={['action','details','created_at']} />}
+        {tab === 'activity' && <SimpleTable rows={data.activity} columns={['action_type','description','performed_by','created_at']} />}
       </section>
     </main>
   );
