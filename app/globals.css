@@ -65,4 +65,36 @@ button{cursor:pointer}
   .admin-shell{grid-template-columns:minmax(0,1fr);align-content:start}.admin-shell aside{position:relative;align-self:start;width:100%;height:auto;padding:15px;overflow:hidden}.admin-brand{border:0;padding-bottom:12px}.admin-shell nav{display:flex;max-width:100%;margin:0;overflow-x:auto}.admin-shell nav button{min-width:max-content}.admin-logout{margin:8px 0 0}.admin-shell>section{width:100%;padding:20px}.media-form,.admin-form{grid-template-columns:1fr}.metric-grid{grid-template-columns:1fr 1fr}
 }
 
-@media(max-width:420px){.login-header{height:124px;padding-top:78px;font-size:21px}.login-form{min-height:calc(100dvh - 124px);padding:105px 24px 55px}.login-button{min-height:70px;margin-top:220px;font-size:20px}.field input{font-size:16px}.home-content{padding-inline:16px}.hero-slide{height:175px}.hero-copy strong{font-size:22px}.wallet-book{transform:scale(.8) rotate(4deg)}.ratio-card{grid-template-columns:1.15fr .85fr}.ratio-card>div+div{padding-left:13px}.ratio-card small{font-size:13px}.ratio-card strong{font-size:16px}.stat-grid>div{padding:15px}.stat-grid small{font-size:14px}.mpin-dialog{padding-inline:18px}.mpin{gap:5px}.mpin input{width:38px}.metric-grid{grid-template-columns:1fr}}
+@media(max-width:420px){
+  .login-header{height:108px;padding-top:76px;font-size:17px}
+  .login-form{min-height:calc(100dvh - 108px);padding:121px 16px 38px}
+  .login-fields{gap:23px}
+  .field{height:52px;gap:24px;padding:0 20px;border-radius:9px}
+  .field-icon{width:21px;height:21px;flex-basis:21px}
+  .field input{padding:12px 0;font-size:14px}
+  .login-button{min-height:52px;margin-top:231px;border-radius:9px;font-size:16px}
+
+  .phone-shell{padding-bottom:64px}
+  .app-header{height:118px;padding:0 16px 24px}
+  .app-header strong{font-size:20px;letter-spacing:-.7px}
+  .home-content{padding:0 16px 24px}
+  .hero-slide{height:142px;border-radius:9px}
+  .fallback-slide{padding:18px 22px}
+  .hero-copy strong{font-size:20px;letter-spacing:-.6px}
+  .hero-copy span{margin-top:6px;font-size:12px}
+  .hero-copy button{margin-top:12px;padding:5px 8px;font-size:10px}
+  .wallet-book{width:65px;height:84px;margin-right:6px;border-radius:6px 10px 10px 6px;box-shadow:9px 6px 0 #b4f06b;transform:rotate(4deg)}
+  .wallet-book:after{left:13px;bottom:15px;width:37px;height:3px;box-shadow:0 7px 0 #eaffda}
+  .wallet-book span{left:19px;top:17px;width:29px;height:29px;font-size:18px}
+  .dots{bottom:7px;gap:5px}.dots i{width:7px;height:4px}.dots i.active{width:16px}
+  .ratio-card{grid-template-columns:1.15fr .85fr;min-height:102px;margin-top:18px;padding:14px 16px;border-radius:9px}
+  .ratio-card>div{gap:6px}.ratio-card>div+div{padding-left:16px}
+  .ratio-card small{font-size:12px}.ratio-card strong{margin-top:10px;font-size:15px}.ratio-card span{font-size:10px}.ratio-card b{margin-top:10px;font-size:24px}
+  .reward-banner{height:91px;margin-top:16px}.reward-banner strong{font-size:18px}.reward-banner span{font-size:24px}
+  .upi-status{margin:26px 0 14px;font-size:13px}
+  .bind-upi{min-height:52px;border-radius:9px;font-size:16px}
+  .stat-grid{margin-top:18px;border-radius:9px}.stat-grid>div{padding:11px 14px}.stat-grid small{font-size:12px}.stat-grid strong{font-size:14px}.stat-grid i{font-size:20px}
+  .bottom-nav{height:64px;padding:6px 8px 4px}.bottom-nav button{gap:2px}.bottom-nav b{width:25px;height:24px}.bottom-nav b svg{width:24px;height:24px}.bottom-nav small{font-size:10px}
+
+  .mpin-dialog{padding-inline:18px}.mpin{gap:5px}.mpin input{width:38px}.metric-grid{grid-template-columns:1fr}
+}
