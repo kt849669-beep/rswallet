@@ -40,7 +40,9 @@ export default function LoginForm() {
       <form className="login-form" onSubmit={submit}>
         <div className="login-fields">
           <label className="field">
-            <span className="field-icon phone-icon" aria-hidden="true" />
+            <svg className="field-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none">
+              <path d="M7.1 4.75h4.35l2.17 6.5-3.12 2.48c1.72 3.63 4.52 6.43 8.15 8.15l2.48-3.12 6.5 2.17v4.35a2.35 2.35 0 0 1-2.35 2.35C13.72 27.63 4.75 18.66 4.75 7.1A2.35 2.35 0 0 1 7.1 4.75Z" stroke="currentColor" strokeWidth="2.35" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             <span className="sr-only">Phone number</span>
             <input
               type="tel"
@@ -53,7 +55,10 @@ export default function LoginForm() {
             />
           </label>
           <label className="field">
-            <span className="field-icon lock-icon" aria-hidden="true" />
+            <svg className="field-icon" aria-hidden="true" viewBox="0 0 32 32" fill="none">
+              <rect x="5.5" y="13" width="21" height="15" rx="3" stroke="currentColor" strokeWidth="2.25" />
+              <path d="M10.5 13V9.5a5.5 5.5 0 0 1 11 0V13M16 19v4" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />
+            </svg>
             <span className="sr-only">Password</span>
             <input
               type="password"
