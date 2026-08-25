@@ -1,0 +1,29 @@
+{
+  "name": "RS Wallet",
+  "short_name": "RS Wallet",
+  "description": "Official RS Wallet app — RS Wallet login, UPI linking, USDT rate and account activity.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d4f49",
+  "theme_color": "#0d4f49",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "/rswallet-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/rswallet-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

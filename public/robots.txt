@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /home
+Disallow: /api/
+
+Sitemap: https://rswallet.online/sitemap.xml
+Host: rswallet.online
