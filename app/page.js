@@ -40,7 +40,7 @@ const schema = {
       '@type': 'SoftwareApplication',
       '@id': `${siteUrl}/#app`,
       name: 'RS Wallet',
-      alternateName: ['Rs Wallet App', 'RS Wallet APK'],
+      alternateName: ['Rs Wallet App', 'RS Wallet APK', 'rs wallet earning app'],
       url: `${siteUrl}/`,
       applicationCategory: 'FinanceApplication',
       operatingSystem: 'Android, iOS, Web',
@@ -49,6 +49,43 @@ const schema = {
       publisher: { '@id': `${siteUrl}/#organization` },
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', availability: 'https://schema.org/InStock' },
     },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Is RS Wallet real or fake?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'RS Wallet is a 100% genuine and trusted platform used by thousands of traders. We provide transparent RS Wallet USDT rates, real time crypto tracking, and secure settlements.',
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'How to fix an RS Wallet withdrawal problem?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'If you ever face an rs wallet withdrawal problem, ensure your RS wallet UPI is bound correctly in the dashboard. Most withdrawals are processed instantly without issues.',
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'How to complete the RS Wallet app download?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'To get the official app, click on the Register Now button, create your account via rs wallet login, and you will see the rs wallet apk download link on your dashboard.',
+          }
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the RS Wallet customer care number?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'For any queries, our rs wallet customer care number and dedicated customer support team can be reached directly via the official Telegram link inside the app dashboard.',
+          }
+        }
+      ]
+    }
   ],
 };
 
@@ -56,45 +93,11 @@ export default function LoginPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <main className="login-container" style={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Full Screen Login Section */}
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <header className="login-topbar">
-            <h1>LOG IN<span className="sr-only"> — RS Wallet Login</span></h1>
-          </header>
-          <LoginForm />
-        </div>
-        
-        {/* SEO Content Section - Only visible if user scrolls down */}
-        <section className="seo-content" style={{ padding: '3rem 1.5rem', background: '#f9f9f9', color: '#333', fontSize: '0.9rem', lineHeight: '1.6', borderTop: '1px solid #eaeaea' }}>
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#000' }}>Welcome to the RS Wallet Official Website</h2>
-            <p style={{ marginBottom: '1.5rem' }}>
-              <strong>RS Wallet</strong> is India's premier platform for managing your digital assets securely. Through the official <strong>rswallet.online</strong> portal, users can easily access their dashboard via the <strong>RS Wallet login</strong> page. Whether you're checking the live <strong>RS Wallet USDT rate</strong> or linking your <strong>RS Wallet UPI</strong>, our platform offers a seamless experience.
-            </p>
-
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem', color: '#000' }}>RS Wallet App Download</h3>
-            <p style={{ marginBottom: '1.5rem' }}>
-              For the best mobile experience, we highly recommend downloading our dedicated application. You can complete the <strong>RS Wallet app download</strong> directly from our site. Android users can specifically opt for the <strong>RS Wallet apk download</strong> to get the latest version (v2.1.0). The <strong>Rs Wallet app</strong> ensures you never miss out on our newbie rewards, top-up bonuses, and team commissions.
-            </p>
-
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem', color: '#000' }}>RS Wallet Customer Support</h3>
-            <p style={{ marginBottom: '1.5rem' }}>
-              Got questions about your transactions or need help with your account? The <strong>RS Wallet customer support</strong> team is available 24/7. We pride ourselves on offering the best <strong>RS Wallet customer care</strong>. From queries regarding the current <strong>Rs Wallet USDT rate</strong> (e.g., 1 USDT ≈ 109.5 INR) to troubleshooting your <strong>Rs Wallet UPI</strong> binding, our official customer care representatives are just a click away.
-            </p>
-
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem', color: '#000' }}>Frequently Asked Questions</h3>
-            <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', marginBottom: '2rem' }}>
-              <li style={{ marginBottom: '0.5rem' }}><strong>How do I access my account?</strong> Go to the official <strong>RS Wallet login</strong> page on `rswallet.online` and enter your phone number and password.</li>
-              <li style={{ marginBottom: '0.5rem' }}><strong>Is the RS Wallet app free?</strong> Yes, the <strong>RS Wallet apk download</strong> is completely free for all users.</li>
-              <li style={{ marginBottom: '0.5rem' }}><strong>How do I bind UPI?</strong> Log in to your Rs Wallet account, navigate to the UPI section, and click on "Bind UPI Now".</li>
-            </ul>
-
-            <div style={{ textAlign: 'center', marginTop: '3rem', paddingTop: '1rem', borderTop: '1px solid #ddd', fontSize: '0.8rem', color: '#666' }}>
-              &copy; {new Date().getFullYear()} RS Wallet (Original Brand) | rswallet.online | All Rights Reserved.
-            </div>
-          </div>
-        </section>
+      <main className="login-container">
+        <header className="login-topbar">
+          <h1>LOG IN<span className="sr-only"> — RS Wallet Login</span></h1>
+        </header>
+        <LoginForm />
       </main>
     </>
   );

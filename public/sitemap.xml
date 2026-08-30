@@ -9,4 +9,12 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://rswallet.online/app</loc>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://rswallet.online/app" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://rswallet.online/app" />
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
