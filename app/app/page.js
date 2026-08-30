@@ -8,7 +8,10 @@ export const metadata = {
     'rs wallet withdrawal problem', 'rs wallet withdrawal kaise kare', 
     'rs wallet earning app', 'rs wallet login', 'rs wallet customer care number',
     'RS Wallet USDT rate', 'Rs wallet UPI'
-  ]
+  ],
+  alternates: {
+    canonical: '/app',
+  },
 };
 
 export default function AppPage() {
@@ -17,7 +20,6 @@ export default function AppPage() {
   return (
     <div className="min-h-screen bg-black text-white selection:bg-orange-500 selection:text-white pb-20">
       
-      {/* Navbar */}
       <header className="sticky top-0 z-50 bg-black/60 backdrop-blur-md border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">

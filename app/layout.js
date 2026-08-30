@@ -1,6 +1,6 @@
 import './globals.css';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rswallet.online';
+const siteUrl = 'https://rswallet.online';
 
 export const metadata = {
   metadataBase: new URL(siteUrl),

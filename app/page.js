@@ -1,6 +1,6 @@
 import LoginForm from '@/components/LoginForm';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rswallet.online';
+const siteUrl = 'https://rswallet.online';
 
 const schema = {
   '@context': 'https://schema.org',
