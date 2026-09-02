@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://rswallet-mobile-demo.mathurmonu62.chatgpt.site'),
   title: 'RsWallet',
   description: 'RsWallet mobile wallet experience.',
   icons: {
