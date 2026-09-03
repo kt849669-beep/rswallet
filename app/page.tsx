@@ -7,6 +7,8 @@ import {
   ChevronRight,
   CircleDollarSign,
   CircleEllipsis,
+  CirclePlay,
+  Copy,
   Delete,
   FileText,
   Globe,
@@ -17,18 +19,19 @@ import {
   Phone,
   Star,
   User,
+  UserRound,
   Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-type Screen = 'login' | 'mpin' | 'home' | 'profile';
+type Screen = 'login' | 'mpin' | 'home' | 'deposit' | 'team' | 'profile';
 
 const navItems = [
   { label: 'Home', icon: House, target: 'home' as const },
-  { label: 'Deposit', icon: CircleDollarSign },
+  { label: 'Deposit', icon: CircleDollarSign, target: 'deposit' as const },
   { label: 'UPI', icon: BriefcaseBusiness },
-  { label: 'Team', icon: Users },
+  { label: 'Team', icon: Users, target: 'team' as const },
   { label: 'Me', icon: CircleEllipsis, target: 'profile' as const },
 ];
 
@@ -165,6 +168,14 @@ export default function Home() {
           />
         )}
 
+        {screen === 'deposit' && (
+          <DepositView navigate={setScreen} showComingSoon={showComingSoon} />
+        )}
+
+        {screen === 'team' && (
+          <TeamView navigate={setScreen} showComingSoon={showComingSoon} />
+        )}
+
         {screen === 'profile' && (
           <ProfileView
             navigate={setScreen}
@@ -173,7 +184,7 @@ export default function Home() {
         )}
 
         {notice && (
-          <div role="status" className="absolute bottom-[66px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg">
+          <div role="status" className="fixed bottom-[78px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg">
             {notice}
           </div>
         )}
@@ -254,12 +265,12 @@ function HomeView({
   navigate,
   showComingSoon,
 }: {
-  active: 'home' | 'profile';
+  active: 'home' | 'deposit' | 'team' | 'profile';
   navigate: (screen: Screen) => void;
   showComingSoon: (label: string) => void;
 }) {
   return (
-    <div className="min-h-dvh bg-white pb-[62px] sm:min-h-[calc(100dvh-48px)]">
+    <div className="min-h-dvh bg-white pb-[76px] sm:min-h-[calc(100dvh-48px)]">
       <div className="px-4 pb-5 pt-[26px]">
         <h1 className="mb-5 text-[20px] font-bold tracking-[-0.03em] text-black">RsWallet</h1>
 
@@ -305,6 +316,164 @@ function HomeView({
       </div>
 
       <BottomNav active={active} navigate={navigate} showComingSoon={showComingSoon} />
+    </div>
+  );
+}
+
+const depositTasks = [
+  { amount: '30000 INR', income: '1200 (4%)', quota: '+31200' },
+  { amount: '30000 INR', income: '1200 (4%)', quota: '+31200' },
+  { amount: '30000 INR', income: '1200 (4%)', quota: '+31200' },
+  { amount: '19000 INR', income: '760 (4%)', quota: '+19760' },
+  { amount: '18999.05 INR', income: '759.96 (4%)', quota: '+19759.01' },
+];
+
+function DepositView({
+  navigate,
+  showComingSoon,
+}: {
+  navigate: (screen: Screen) => void;
+  showComingSoon: (label: string) => void;
+}) {
+  return (
+    <div className="min-h-dvh bg-white pb-[76px] sm:min-h-[calc(100dvh-48px)]">
+      <div className="border-b border-[#eeeeee] px-[18px] pt-[26px]">
+        <div className="flex gap-8 pb-[17px]">
+          <button type="button" className="text-[16px] font-bold text-black">INR</button>
+          <button type="button" className="text-[16px] font-semibold text-[#9b9b9b]" onClick={() => showComingSoon('USDT')}>USDT</button>
+        </div>
+      </div>
+
+      <div className="px-[18px] pt-[21px]">
+        <div className="flex gap-8 border-b border-[#eeeeee] pb-[15px]">
+          <button type="button" className="text-[16px] font-bold text-black">Task</button>
+          <button type="button" className="text-[16px] font-semibold text-[#9b9b9b]" onClick={() => showComingSoon('VIP')}>VIP</button>
+        </div>
+
+        <div className="mx-[14px] mt-[6px] flex h-[44px] items-center rounded-[6px] bg-[#e7e3ff] px-4">
+          <span className="mr-2 grid size-[22px] shrink-0 place-items-center rounded-full bg-[#ffe666] text-[#d5ad30]">
+            <CircleDollarSign className="size-[17px]" strokeWidth={2} />
+          </span>
+          <p className="text-[13px] font-semibold tracking-[-0.015em]">Complete a task to earn Commission and Bonus</p>
+        </div>
+
+        <button type="button" className="mt-[8px] flex items-center gap-2.5 text-[15px] font-semibold" onClick={() => showComingSoon('How Buy Quota?')}>
+          <CirclePlay className="size-[18px] text-[#4d5565]" strokeWidth={2.2} />
+          How Buy Quota?
+        </button>
+
+        <div className="mt-[21px] flex items-center gap-[7px]">
+          <button type="button" className="flex h-[36px] min-w-0 flex-1 items-center justify-between rounded-[6px] bg-[#f7f7f7] px-4 text-left text-[14px] font-medium" onClick={() => showComingSoon('Sort')}>
+            <span>From high to low</span>
+            <ChevronDown className="size-4 text-[#dadada]" />
+          </button>
+          <button type="button" className="h-[36px] w-[58px] rounded-[6px] bg-[#f7f7f7] text-[13px] font-semibold text-[#a4a4ad]" onClick={() => showComingSoon('Minimum')}>Min</button>
+          <span className="text-[14px] font-bold">−</span>
+          <button type="button" className="h-[36px] w-[58px] rounded-[6px] bg-[#f7f7f7] text-[13px] font-semibold text-[#a4a4ad]" onClick={() => showComingSoon('Maximum')}>Max</button>
+          <button type="button" className="h-[38px] w-[76px] rounded-[9px] bg-black text-[14px] font-medium text-white" onClick={() => showComingSoon('Refresh')}>Refresh</button>
+        </div>
+
+        <section className="mt-[10px]">
+          {depositTasks.map((task, index) => (
+            <article key={`${task.amount}-${index}`} className="flex min-h-[91px] items-center">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[19px] font-bold tracking-[-0.02em]">{task.amount}</h2>
+                <div className="mt-[6px] flex gap-[27px]">
+                  <div>
+                    <p className="text-[13px] font-medium text-[#9c9c9c]">Income</p>
+                    <p className="mt-0.5 text-[13px] font-medium">{task.income}</p>
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-medium text-[#9c9c9c]">Quota</p>
+                    <p className="mt-0.5 text-[13px] font-medium text-[#22c4ba]">{task.quota}</p>
+                  </div>
+                </div>
+              </div>
+              <button type="button" className="h-[38px] w-[69px] rounded-[10px] bg-black text-[15px] font-medium text-white" onClick={() => showComingSoon('Buy')}>Buy</button>
+            </article>
+          ))}
+        </section>
+      </div>
+
+      <BottomNav active="deposit" navigate={navigate} showComingSoon={showComingSoon} />
+    </div>
+  );
+}
+
+const teamMembers = [
+  '765****5831',
+  '988****5831',
+];
+
+function TeamView({
+  navigate,
+  showComingSoon,
+}: {
+  navigate: (screen: Screen) => void;
+  showComingSoon: (label: string) => void;
+}) {
+  const inviteUrl = 'https://enguinpay-app.com/regist?code=0eqshowpci3x';
+
+  const copyInvite = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      showComingSoon('Invite code copied');
+    } catch {
+      showComingSoon('Copy invite code');
+    }
+  };
+
+  return (
+    <div className="min-h-dvh bg-white pb-[76px] sm:min-h-[calc(100dvh-48px)]">
+      <div className="px-[18px] pb-6 pt-[26px]">
+        <h1 className="text-[22px] font-bold tracking-[-0.02em]">Team</h1>
+
+        <section className="mt-[17px] h-[202px] rounded-[9px] bg-[#454545] px-[24px] py-[31px] text-white">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-[34px] font-normal leading-none">0</p>
+              <p className="mt-[15px] text-[15px] font-medium">Commission</p>
+            </div>
+            <div>
+              <p className="text-[34px] font-normal leading-none">0</p>
+              <p className="mt-[15px] text-[15px] font-medium">Team Recharge</p>
+            </div>
+          </div>
+          <div className="mt-[66px] flex items-center gap-1.5">
+            <UserRound className="size-[20px]" strokeWidth={2} />
+            <span className="text-[17px]">2</span>
+          </div>
+        </section>
+
+        <h2 className="mt-[35px] text-[18px] font-bold">Invite Code</h2>
+        <button type="button" className="mt-[14px] flex h-[61px] w-full items-center rounded-[10px] border border-[#ededed] px-[20px] text-left" onClick={copyInvite}>
+          <span className="min-w-0 flex-1 truncate text-[13px] font-semibold">...enguinpay-app.com/regist?code=0eqshowpci3x</span>
+          <span className="ml-2 grid size-[35px] shrink-0 place-items-center rounded-[5px] border border-[#f0f0f0]">
+            <Copy className="size-[20px] text-[#555]" strokeWidth={2.2} />
+          </span>
+        </button>
+
+        <h2 className="mt-[36px] text-[18px] font-bold">Team Detail</h2>
+        <section className="mt-[25px]">
+          {teamMembers.map((phone, index) => (
+            <article key={phone} className="ml-[18px] flex min-h-[91px] items-center border-b border-[#eeeeee] last:border-b-0">
+              <div className="relative mr-[12px] size-[56px] shrink-0 overflow-hidden rounded-full bg-[#062f35]">
+                <img src="/rswallet-team.jpeg" alt="" className={`absolute left-0 w-[430px] max-w-none ${index === 0 ? 'top-[-496px]' : 'top-[-586px]'}`} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] font-bold">Phone: {phone}</p>
+                <p className="mt-[9px] text-[13px] font-medium text-[#999]">Recharge: 0</p>
+              </div>
+              <div className="ml-2 text-right text-[#999]">
+                <p className="flex items-center justify-end gap-1 text-[14px]"><UserRound className="size-[17px]" />0</p>
+                <p className="mt-[9px] text-[13px] font-medium">Comm: 0</p>
+              </div>
+            </article>
+          ))}
+        </section>
+      </div>
+
+      <BottomNav active="team" navigate={navigate} showComingSoon={showComingSoon} />
     </div>
   );
 }
@@ -362,28 +531,43 @@ function BottomNav({
   navigate,
   showComingSoon,
 }: {
-  active: 'home' | 'profile';
+  active: 'home' | 'deposit' | 'team' | 'profile';
   navigate: (screen: Screen) => void;
   showComingSoon: (label: string) => void;
 }) {
   return (
-    <nav aria-label="Main navigation" className="absolute bottom-0 left-0 right-0 z-10 grid h-[60px] grid-cols-5 border-t border-[#ececec] bg-white/96 px-1 pb-[max(3px,env(safe-area-inset-bottom))] backdrop-blur">
+    <nav aria-label="Main navigation" className="fixed bottom-0 left-1/2 z-40 grid h-[68px] w-full max-w-[430px] -translate-x-1/2 grid-cols-5 border-t border-[#ececec] bg-white/96 px-1 pb-[max(3px,env(safe-area-inset-bottom))] backdrop-blur">
       {navItems.map(({ label, icon: Icon, target }) => {
-        const isActive = (label === 'Home' && active === 'home') || (label === 'Me' && active === 'profile');
+        const isActive =
+          (label === 'Home' && active === 'home') ||
+          (label === 'Deposit' && active === 'deposit') ||
+          (label === 'Team' && active === 'team') ||
+          (label === 'Me' && active === 'profile');
         return (
           <button
             key={label}
             type="button"
-            className={`flex flex-col items-center justify-center gap-0.5 text-[10px] ${isActive ? 'text-black' : 'text-[#969696]'}`}
+            className={`flex touch-manipulation flex-col items-center justify-center gap-0.5 text-[11px] ${isActive ? 'text-black' : 'text-[#969696]'}`}
             onClick={() => (target ? navigate(target) : showComingSoon(label))}
           >
             {label === 'Me' && isActive ? (
-              <span className="flex size-6 items-center justify-center gap-[2px] rounded-[8px] bg-black">
+              <span className="flex size-[27px] items-center justify-center gap-[2px] rounded-[8px] bg-black">
                 <span className="size-1 rounded-full bg-white" />
                 <span className="size-1 rounded-full bg-white" />
               </span>
+            ) : label === 'Deposit' && isActive ? (
+              <span className="relative grid size-[28px] place-items-center rounded-full bg-black">
+                <span className="absolute top-[9px] h-[2px] w-[13px] rounded-full bg-white" />
+                <span className="absolute top-[15px] h-[2px] w-[10px] rounded-full bg-white" />
+              </span>
+            ) : label === 'Team' && isActive ? (
+              <span className="grid size-[27px] grid-cols-2 grid-rows-2 gap-[2px]">
+                <span className="col-span-2 rounded-[3px] bg-black" />
+                <span className="rounded-[3px] bg-black" />
+                <span className="rounded-[3px] bg-black" />
+              </span>
             ) : (
-              <Icon className={`size-5 ${isActive ? 'fill-black' : ''}`} strokeWidth={isActive ? 2.4 : 2} />
+              <Icon className={`size-[27px] ${isActive ? 'fill-black' : ''}`} strokeWidth={isActive ? 2.4 : 2} />
             )}
             <span className={isActive ? 'font-medium' : ''}>{label}</span>
           </button>
