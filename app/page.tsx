@@ -2,22 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 import {
-  ArrowLeft,
   BriefcaseBusiness,
+  ChevronDown,
   ChevronRight,
   CircleDollarSign,
   CircleEllipsis,
-  CreditCard,
   Delete,
-  HelpCircle,
+  FileText,
+  Globe,
   House,
   Keyboard,
+  Link,
   LockKeyhole,
-  LogOut,
   Phone,
-  ShieldCheck,
+  Star,
+  User,
   Users,
-  WalletCards,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,10 +33,11 @@ const navItems = [
 ];
 
 const profileRows = [
-  { label: 'Wallet details', icon: WalletCards },
-  { label: 'Payment methods', icon: CreditCard },
-  { label: 'Security', icon: ShieldCheck },
-  { label: 'Help & support', icon: HelpCircle },
+  { label: 'Recharge History', icon: CircleDollarSign },
+  { label: 'Token History', icon: FileText },
+  { label: 'Languages', icon: Globe, value: 'English' },
+  { label: 'Google Authentication', icon: Star },
+  { label: 'Lucky Wheel', icon: CircleEllipsis },
 ];
 
 export default function Home() {
@@ -75,7 +76,7 @@ export default function Home() {
 
   return (
     <main className="min-h-dvh bg-[#ededed] sm:grid sm:place-items-start sm:py-6">
-      <section className="relative mx-auto min-h-dvh w-full max-w-[390px] overflow-hidden bg-white shadow-[0_12px_48px_rgba(0,0,0,.10)] sm:min-h-[calc(100dvh-48px)] sm:rounded-[16px]">
+      <section className="relative mx-auto min-h-dvh w-full max-w-[430px] overflow-hidden bg-white shadow-[0_12px_48px_rgba(0,0,0,.10)] sm:min-h-[calc(100dvh-48px)] sm:rounded-[16px]">
         {(screen === 'login' || screen === 'mpin') && (
           <LoginView
             phone={phone}
@@ -166,14 +167,8 @@ export default function Home() {
 
         {screen === 'profile' && (
           <ProfileView
-            phone={phone}
             navigate={setScreen}
             showComingSoon={showComingSoon}
-            logout={() => {
-              setPin('');
-              setPassword('');
-              setScreen('login');
-            }}
           />
         )}
 
@@ -315,51 +310,46 @@ function HomeView({
 }
 
 function ProfileView({
-  phone,
   navigate,
   showComingSoon,
-  logout,
 }: {
-  phone: string;
   navigate: (screen: Screen) => void;
   showComingSoon: (label: string) => void;
-  logout: () => void;
 }) {
-  const maskedPhone = phone ? `+91 ${phone.slice(0, 2)}••• ••${phone.slice(-3)}` : '+91 ••••• •••••';
-
   return (
-    <div className="min-h-dvh bg-[#f7f7f7] pb-[62px] sm:min-h-[calc(100dvh-48px)]">
-      <header className="flex h-[58px] items-center border-b border-[#ededed] bg-white px-3">
-        <button type="button" aria-label="Back to home" className="grid size-9 place-items-center" onClick={() => navigate('home')}>
-          <ArrowLeft className="size-5" />
+    <div className="min-h-dvh bg-white pb-[68px] sm:min-h-[calc(100dvh-48px)]">
+      <div className="px-4 pb-5 pt-4">
+        <button type="button" className="flex items-center gap-2 text-left" onClick={() => showComingSoon('Edit profile')}>
+          <User className="size-5 fill-[#555] text-[#555]" />
+          <span className="text-[17px] font-semibold tracking-[-0.02em]">Edit profile</span>
+          <ChevronDown className="ml-1 size-5" strokeWidth={2.7} />
         </button>
-        <h1 className="ml-1 text-[17px] font-bold">My Profile</h1>
-      </header>
+        <p className="mt-3 text-[12px] font-medium">ID: 10073108</p>
 
-      <div className="px-4 pb-5 pt-5">
-        <section className="flex items-center gap-3 rounded-[12px] bg-white p-4 shadow-[0_4px_14px_rgba(0,0,0,.04)]">
-          <img src="/rswallet-logo.jpeg" alt="RsWallet logo" className="size-[52px] rounded-[13px] object-cover" />
-          <div>
-            <h2 className="text-[16px] font-bold">RsWallet User</h2>
-            <p className="mt-0.5 text-[11px] text-[#8c8c8c]">{maskedPhone}</p>
-            <span className="mt-1.5 inline-flex rounded-full bg-[#fff3c4] px-2 py-0.5 text-[9px] font-semibold text-[#8b6500]">Verified demo</span>
+        <section className="mt-7">
+          <p className="flex items-center text-[13px] font-semibold"><Link className="mr-0.5 size-3.5" />Quota</p>
+          <div className="mt-2 flex items-center">
+            <p className="text-[35px] font-bold tracking-[-0.03em]">54.36 <span className="text-[17px] tracking-normal">INR</span></p>
+            <Button className="ml-auto h-[38px] min-w-[88px] rounded-full bg-black px-5 text-[14px] font-medium text-white hover:bg-black/85" onClick={() => showComingSoon('Top up')}>Top up</Button>
           </div>
+          <p className="mt-1.5 text-[13px] font-medium text-[#999]">Reward ratio 2%</p>
         </section>
 
-        <section className="mt-4 overflow-hidden rounded-[12px] bg-white shadow-[0_4px_14px_rgba(0,0,0,.04)]">
-          {profileRows.map(({ label, icon: Icon }) => (
-            <button key={label} type="button" className="flex h-[52px] w-full items-center border-b border-[#efefef] px-4 text-left last:border-0" onClick={() => showComingSoon(label)}>
-              <span className="grid size-8 place-items-center rounded-[8px] bg-[#f4f4f4]"><Icon className="size-4 text-[#505050]" /></span>
-              <span className="ml-3 text-[13px] font-medium">{label}</span>
-              <ChevronRight className="ml-auto size-4 text-[#aaa]" />
+        <div className="relative mt-6 aspect-[4.8] overflow-hidden rounded-[8px] bg-black">
+          <img src="/rswallet-profile.jpeg" alt="Invite user rewards" className="absolute left-0 top-0 w-full max-w-none -translate-y-[21.85%]" />
+        </div>
+
+        <section className="mt-4 space-y-3">
+          {profileRows.map(({ label, icon: Icon, value }) => (
+            <button key={label} type="button" className="flex h-[54px] w-full items-center rounded-[10px] border border-[#ededed] bg-white px-4 text-left" onClick={() => showComingSoon(label)}>
+              <Icon className={`size-[18px] shrink-0 ${label === 'Google Authentication' ? 'text-[#4587f2]' : 'text-[#303030]'}`} strokeWidth={2} />
+              <span className="ml-4 text-[15px] font-medium tracking-[-0.01em]">{label}</span>
+              {value && <span className="ml-auto text-[14px] text-[#999]">{value}</span>}
+              <ChevronRight className={`${value ? 'ml-1' : 'ml-auto'} size-[18px] text-[#999]`} strokeWidth={2} />
             </button>
           ))}
+          <div aria-hidden="true" className="h-[54px] rounded-[10px] border border-[#ededed]" />
         </section>
-
-        <button type="button" className="mt-4 flex h-[50px] w-full items-center rounded-[12px] bg-white px-4 text-left text-[#d83b3b] shadow-[0_4px_14px_rgba(0,0,0,.04)]" onClick={logout}>
-          <span className="grid size-8 place-items-center rounded-[8px] bg-[#fff1f1]"><LogOut className="size-4" /></span>
-          <span className="ml-3 text-[13px] font-semibold">Log out</span>
-        </button>
       </div>
 
       <BottomNav active="profile" navigate={navigate} showComingSoon={showComingSoon} />
@@ -387,7 +377,14 @@ function BottomNav({
             className={`flex flex-col items-center justify-center gap-0.5 text-[10px] ${isActive ? 'text-black' : 'text-[#969696]'}`}
             onClick={() => (target ? navigate(target) : showComingSoon(label))}
           >
-            <Icon className={`size-5 ${isActive ? 'fill-black' : ''}`} strokeWidth={isActive ? 2.4 : 2} />
+            {label === 'Me' && isActive ? (
+              <span className="flex size-6 items-center justify-center gap-[2px] rounded-[8px] bg-black">
+                <span className="size-1 rounded-full bg-white" />
+                <span className="size-1 rounded-full bg-white" />
+              </span>
+            ) : (
+              <Icon className={`size-5 ${isActive ? 'fill-black' : ''}`} strokeWidth={isActive ? 2.4 : 2} />
+            )}
             <span className={isActive ? 'font-medium' : ''}>{label}</span>
           </button>
         );
