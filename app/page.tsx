@@ -75,7 +75,7 @@ export default function Home() {
     window.setTimeout(() => hiddenPinInput.current?.focus(), 80);
   };
 
-  const showComingSoon = (label: string) => setNotice(`${label} is coming soon`);
+  const showComingSoon = (label: string) => setNotice(label.endsWith('copied') ? label : `${label} is coming soon`);
 
   return (
     <main className="min-h-dvh bg-[#ededed] sm:grid sm:place-items-start sm:py-6">
@@ -456,9 +456,9 @@ function TeamView({
         <h2 className="mt-[36px] text-[18px] font-bold">Team Detail</h2>
         <section className="mt-[25px]">
           {teamMembers.map((phone, index) => (
-            <article key={phone} className="ml-[18px] flex min-h-[91px] items-center border-b border-[#eeeeee] last:border-b-0">
+            <article key={phone} className="flex min-h-[91px] items-center border-b border-[#eeeeee] last:border-b-0">
               <div className="relative mr-[12px] size-[56px] shrink-0 overflow-hidden rounded-full bg-[#062f35]">
-                <img src="/rswallet-team.jpeg" alt="" className={`absolute left-0 w-[430px] max-w-none ${index === 0 ? 'top-[-496px]' : 'top-[-586px]'}`} />
+                <img src="/rswallet-team.jpeg" alt="" className={`absolute left-[-18px] w-[430px] max-w-none ${index === 0 ? 'top-[-496px]' : 'top-[-586px]'}`} />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[14px] font-bold">Phone: {phone}</p>
