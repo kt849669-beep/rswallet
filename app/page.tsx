@@ -42,6 +42,7 @@ const profileRows = [
 export default function Home() {
   const [screen, setScreen] = useState<Screen>('login');
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [pin, setPin] = useState('');
   const [notice, setNotice] = useState('');
   const hiddenPinInput = useRef<HTMLInputElement>(null);
@@ -64,7 +65,7 @@ export default function Home() {
 
   const openMpin = (event: React.FormEvent) => {
     event.preventDefault();
-    if (phone.length !== 10) return;
+    if (phone.length !== 10 || password.length === 0) return;
     setPin('');
     setScreen('mpin');
     window.setTimeout(() => hiddenPinInput.current?.focus(), 80);
@@ -79,6 +80,8 @@ export default function Home() {
           <LoginView
             phone={phone}
             setPhone={setPhone}
+            password={password}
+            setPassword={setPassword}
             onSubmit={openMpin}
             muted={screen === 'mpin'}
           />
@@ -86,15 +89,6 @@ export default function Home() {
 
         {screen === 'mpin' && (
           <div className="absolute inset-0 z-20 flex items-end bg-white/22 backdrop-blur-[1.5px]">
-            <button
-              type="button"
-              aria-label="Back to login"
-              className="absolute left-5 top-5 grid size-11 place-items-center rounded-full bg-white/90 text-black shadow-sm"
-              onClick={() => setScreen('login')}
-            >
-              <ArrowLeft className="size-5" />
-            </button>
-
             <section className="w-full rounded-t-[30px] bg-white px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-8 shadow-[0_-10px_36px_rgba(0,0,0,.09)]">
               <h2 className="text-center text-[20px] font-semibold text-[#555]">Please enter MPIN verification</h2>
 
@@ -177,6 +171,7 @@ export default function Home() {
             showComingSoon={showComingSoon}
             logout={() => {
               setPin('');
+              setPassword('');
               setScreen('login');
             }}
           />
@@ -195,11 +190,15 @@ export default function Home() {
 function LoginView({
   phone,
   setPhone,
+  password,
+  setPassword,
   onSubmit,
   muted,
 }: {
   phone: string;
   setPhone: (value: string) => void;
+  password: string;
+  setPassword: (value: string) => void;
   onSubmit: (event: React.FormEvent) => void;
   muted: boolean;
 }) {
@@ -233,16 +232,19 @@ function LoginView({
               id="password"
               type="password"
               autoComplete="off"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter Password"
               className="h-full border-0 bg-transparent px-0 text-[18px] font-medium text-[#303030] shadow-none outline-none placeholder:text-[#949494] focus-visible:border-0 focus-visible:ring-0"
             />
           </div>
-          <p className="text-center text-xs text-[#aaa]">Demo preview · details are not saved</p>
+          {muted && <p className="-mt-2 text-right text-[17px] font-medium text-[#7889ef]">Forget Password</p>}
+          <p id="demo-note" className="sr-only">Demo preview. Entered details are not saved.</p>
         </div>
 
         <Button
           type="submit"
-          disabled={phone.length !== 10}
+          disabled={phone.length !== 10 || password.length === 0}
           className="mt-auto h-[80px] w-full rounded-[13px] bg-black text-[24px] font-medium text-white hover:bg-black/85 disabled:bg-[#8e8e8e] disabled:opacity-100"
         >
           LOG IN
