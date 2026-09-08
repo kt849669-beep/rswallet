@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Poppins } from 'next/font/google';
 import './globals.css';
 
 const geistSans = Geist({
@@ -12,10 +12,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const walletFont = Poppins({ variable: '--font-wallet', subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://rswallet-mobile-demo.mathurmonu62.chatgpt.site'),
-  title: 'RsWallet',
-  description: 'RsWallet mobile wallet experience.',
+  title: 'RS Wallet Login | Mobile Demo',
+  description: 'Explore the RS Wallet mobile demo: login, MPIN, wallet home, profile and the USDT to INR display. Use test details for this browser preview.',
+  applicationName: 'RsWallet Demo',
+  keywords: ['rs wallet', 'rs wallet login', 'rs wallet official', 'rs wallet apk', 'rs wallet app download', 'rs wallet usdt to inr'],
+  alternates: { canonical: '/login' },
   icons: {
     icon: [{ url: '/rswallet-logo.jpeg', type: 'image/jpeg' }],
     apple: [{ url: '/rswallet-logo.jpeg', type: 'image/jpeg' }],
@@ -49,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${walletFont.variable} antialiased`}
       >
         {children}
       </body>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rswallet-mobile-demo.mathurmonu62.chatgpt.site/sitemap.xml
