@@ -1,4 +1,6 @@
 'use client';
+import type { PublicContent } from '@/lib/site-content';
+import { ManagedSlides } from '@/components/managed-media';
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, Copy, FileClock, Globe, Link, LockKeyhole, Phone, UserRound, BadgeCheck, CircleDot, LogOut } from 'lucide-react';
@@ -50,16 +52,16 @@ export function WalletLogin({ phone, setPhone, password, setPassword, onSubmit, 
   </div>;
 }
 
-export function WalletHome({ footer, showComingSoon }: { footer: ReactNode; showComingSoon: (label: string) => void }) {
+export function WalletHome({ footer, showComingSoon, content }: { footer: ReactNode; showComingSoon: (label: string) => void; content: PublicContent }) {
   return <div className="wallet-page home-page">
     <div className="home-content">
       <h1 className="home-title">RsWallet</h1>
-      <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={179} width={539} height={224} alt="A must read for newbies. How to make more profits. Click to read." className="home-hero" />
+      {content.slidesEnabled && (content.defaultSlide ? <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={179} width={539} height={224} alt="A must read for newbies. How to make more profits. Click to read." className="home-hero" /> : content.slides.length > 0 ? <ManagedSlides slides={content.slides} /> : null)}
       <section className="ratio-card">
         <div><h2>USDT Ratio</h2><p className="usdt-value">1 USDT ≈ 109.5 INR</p><p className="bonus-note">Bonus ratio: 0%</p></div>
         <div><h2>INR Bonus Ratio</h2><p className="ratio-percent">4%</p></div>
       </section>
-      <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={598} width={539} height={135} alt="Newbie Reward" className="newbie-banner" />
+      {content.homeBanner.enabled && (content.homeBanner.useDefault ? <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={598} width={539} height={135} alt="Newbie Reward" className="newbie-banner" /> : content.homeBanner.asset ? <img src={content.homeBanner.asset.url} alt="Newbie Reward" className="newbie-banner managed-banner" /> : null)}
       <p className="upi-note">You&apos;re not bound to UPI</p>
       <Button className="bind-upi" onClick={() => showComingSoon('Bind UPI')}>Bind UPI Now</Button>
       <section className="balance-card">
@@ -80,8 +82,8 @@ const rows = [
   { label: 'Lucky Wheel', icon: CircleDot },
 ];
 
-export function WalletProfile({ footer, navigate, showComingSoon, logout }: {
-  footer: ReactNode; navigate: (screen: WalletScreen) => void; showComingSoon: (label: string) => void; logout: () => void;
+export function WalletProfile({ footer, navigate, showComingSoon, logout, content }: {
+  footer: ReactNode; navigate: (screen: WalletScreen) => void; showComingSoon: (label: string) => void; logout: () => void; content: PublicContent;
 }) {
   return <div className="wallet-page profile-page">
     <div className="profile-content">
@@ -92,7 +94,7 @@ export function WalletProfile({ footer, navigate, showComingSoon, logout }: {
         <div className="quota-value-row"><p className="quota-value">54.36 <span>INR</span></p><Button className="top-up" onClick={() => navigate('deposit')}>Top up</Button></div>
         <p className="reward-ratio">Reward ratio 2%</p>
       </section>
-      <ScreenshotAsset src="/rswallet-profile.jpeg" sourceWidth={892} sourceHeight={1600} x={38} y={460} width={816} height={171} alt="Invite user rewards. Earn team commissions." className="invite-banner" />
+      {content.profileBanner.enabled && (content.profileBanner.useDefault ? <ScreenshotAsset src="/rswallet-profile.jpeg" sourceWidth={892} sourceHeight={1600} x={38} y={460} width={816} height={171} alt="Invite user rewards. Earn team commissions." className="invite-banner" /> : content.profileBanner.asset ? <img src={content.profileBanner.asset.url} alt="Invite user rewards" className="invite-banner managed-banner" /> : null)}
       <section className="profile-options">
         {rows.map(({ label, icon: Icon, value }) => <button type="button" className="profile-option" key={label} onClick={() => label === 'Google Authentication' ? navigate('authenticator') : showComingSoon(label)}>
           <Icon className="profile-option-icon" /><span>{label}</span>{value && <span className="option-value">{value}</span>}<ChevronRight className="option-chevron" strokeWidth={1.8} />

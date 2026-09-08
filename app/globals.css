@@ -63,6 +63,15 @@ input {
 
 html { -webkit-text-size-adjust: 100%; overscroll-behavior-x: none; scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
+.telegram-popup { --telegram-unit: min(1vw, 4.3px); top: 45%; width: calc(85.5 * var(--telegram-unit)); max-width: 368px; padding: 0; display: block; overflow: hidden; border: 0; border-radius: calc(4.2 * var(--telegram-unit)); background: white; box-shadow: none; font-family: Arial, sans-serif; }
+body:has(.telegram-popup) [data-slot="dialog-overlay"] { background: rgb(0 0 0 / 70%); backdrop-filter: none; }
+.telegram-title { margin: calc(7.5 * var(--telegram-unit)) 0 0; color: #303030; font-family: Arial, sans-serif; font-size: calc(4.4 * var(--telegram-unit)); font-weight: 600; line-height: 1.25; text-align: center; outline: none; }
+.telegram-description { margin: calc(3.7 * var(--telegram-unit)) 0 calc(7.5 * var(--telegram-unit)); padding: 0 calc(6.5 * var(--telegram-unit)); color: #686868; font-size: calc(3.75 * var(--telegram-unit)); line-height: 1.4; text-align: left; }
+.telegram-actions { display: grid; grid-template-columns: 1fr 1fr; height: calc(12.7 * var(--telegram-unit)); border-top: 1px solid #f6f6f6; }
+.telegram-actions > * { display: flex; align-items: center; justify-content: center; font-family: var(--font-wallet), Arial, sans-serif; font-size: calc(4.3 * var(--telegram-unit)); font-weight: 500; text-decoration: none; }
+.telegram-cancel { color: #242424; }
+.telegram-join { border-left: 1px solid #f6f6f6; color: #0089df; }
+.deposit-unavailable-message { position: fixed; top: 46%; left: 50%; transform: translate(-50%, -50%); z-index: 100; padding: 15px 22px; border-radius: 8px; background: rgb(0 0 0 / 88%); color: white; font-size: 16px; line-height: 1.5; text-align: center; white-space: nowrap; }
 .wallet-shell { --wallet-unit: min(1vw, 4.3px); color: #080808; }
 .wallet-page { min-height: 100svh; padding-bottom: calc(calc(18 * var(--wallet-unit)) + env(safe-area-inset-bottom, 0px)); }
 .reference-asset { position: relative; overflow: hidden; }
@@ -238,3 +247,15 @@ html::-webkit-scrollbar { display: none; }
     @apply font-sans;
   }
 }
+
+.managed-slides{overflow:hidden;border-radius:calc(2 * var(--wallet-unit));background:#f5f5f5}
+.managed-slides img{width:100%;aspect-ratio:539/224;object-fit:contain}
+.managed-slide-dots{position:absolute;bottom:6px;left:0;right:0;display:flex;justify-content:center;gap:4px}
+.managed-slide-dots button{width:15px;height:6px;border-radius:5px;background:#aaa;box-shadow:0 0 0 6px transparent}
+.managed-slide-dots button[aria-current=true]{background:#fff}
+.managed-banner{display:block;width:100%;object-fit:contain}
+.newbie-banner.managed-banner{aspect-ratio:539/135}
+.invite-banner.managed-banner{aspect-ratio:816/171}
+.wallet-media-popup{width:calc(100% - 36px);max-width:390px!important;padding:20px;gap:17px}
+.wallet-media-popup img,.wallet-media-popup video{display:block;width:100%;max-height:65dvh;object-fit:contain;border-radius:8px}
+.wallet-media-popup [data-slot=dialog-title]{padding-right:25px;font-size:17px}

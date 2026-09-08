@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BriefcaseBusiness,
   ChevronDown,
@@ -18,6 +18,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { AuthenticatorView, WalletHome, WalletLogin, WalletProfile, WalletNavIcon, type WalletScreen } from '@/components/wallet-views';
 import { createDemoSecret } from '@/lib/demo-authenticator';
+import { TelegramPopup } from '@/components/telegram-popup';
+import { MediaPopup } from '@/components/managed-media';
+import { useSiteContent } from '@/hooks/use-site-content';
 
 type Screen = WalletScreen;
 
@@ -37,6 +40,10 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
   const [password, setPassword] = useState('');
   const [pin, setPin] = useState('');
   const [notice, setNotice] = useState('');
+  const content = useSiteContent();
+  const [dismissedTelegram, setDismissedTelegram] = useState('');
+  const [dismissedMedia, setDismissedMedia] = useState('');
+  const [depositUnavailable, setDepositUnavailable] = useState(false);
   const hiddenPinInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -44,6 +51,8 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     const timer = window.setTimeout(() => {
       setPassword('');
       setPin('');
+      setDismissedTelegram('');
+      setDismissedMedia('');
       setScreen('home');
     }, 300);
     return () => window.clearTimeout(timer);
@@ -82,17 +91,42 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     setScreen(next);
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setPhone('');
     setPassword('');
     setPin('');
     setAuthSecret('');
     setAuthBound(false);
     setNotice('');
+    setDismissedTelegram('');
+    setDismissedMedia('');
+    setDepositUnavailable(false);
     setScreen('login');
+  }, []);
+
+  useEffect(() => {
+    if (screen !== 'home' || depositUnavailable) return;
+    const timer = window.setTimeout(logout, 15_000);
+    return () => window.clearTimeout(timer);
+  }, [screen, depositUnavailable, logout]);
+
+  useEffect(() => {
+    if (!depositUnavailable) return;
+    const timer = window.setTimeout(logout, 5_000);
+    return () => window.clearTimeout(timer);
+  }, [depositUnavailable, logout]);
+
+  const showComingSoon = (label: string) => {
+    if (screen === 'home') return;
+    setNotice(label.endsWith('copied') ? label : `${label} is coming soon`);
   };
 
-  const showComingSoon = (label: string) => setNotice(label.endsWith('copied') ? label : `${label} is coming soon`);
+  const telegramKey = JSON.stringify(content.telegram);
+  const mediaKey = JSON.stringify(content.popup);
+  const telegramOpen = screen === 'home' && content.telegram.enabled && !!content.telegram.url && dismissedTelegram !== telegramKey && !depositUnavailable;
+  const mediaOpen = screen === 'home' && content.popup.enabled && !!content.popup.asset && dismissedMedia !== mediaKey && !telegramOpen && !depositUnavailable;
+  useEffect(() => { if (!content.telegram.enabled) setDismissedTelegram(''); }, [content.telegram.enabled]);
+  useEffect(() => { if (!content.popup.enabled) setDismissedMedia(''); }, [content.popup.enabled]);
 
   return (
     <main className="min-h-dvh bg-[#ededed] sm:grid sm:place-items-start sm:py-6">
@@ -178,18 +212,23 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
           </div>
         )}
 
-        {screen === 'home' && <WalletHome showComingSoon={showComingSoon} footer={<BottomNav active="home" navigate={navigate} showComingSoon={showComingSoon} />} />}
+        {screen === 'home' && <WalletHome content={content} showComingSoon={showComingSoon} footer={<BottomNav active="home" navigate={navigate} showComingSoon={showComingSoon} />} />}
 
         {screen === 'deposit' && (
-          <DepositView navigate={navigate} showComingSoon={showComingSoon} />
+          <DepositView navigate={navigate} showComingSoon={showComingSoon} onBuy={() => setDepositUnavailable(true)} buying={depositUnavailable} />
         )}
 
         {screen === 'team' && (
           <TeamView navigate={navigate} showComingSoon={showComingSoon} />
         )}
 
-        {screen === 'profile' && <WalletProfile navigate={navigate} logout={logout} showComingSoon={showComingSoon} footer={<BottomNav active="profile" navigate={navigate} showComingSoon={showComingSoon} />} />}
+        {screen === 'profile' && <WalletProfile content={content} navigate={navigate} logout={logout} showComingSoon={showComingSoon} footer={<BottomNav active="profile" navigate={navigate} showComingSoon={showComingSoon} />} />}
         {screen === 'authenticator' && <AuthenticatorView secret={authSecret} bound={authBound} onBound={() => { setAuthBound(true); setAuthSecret(''); }} onBack={() => navigate('profile')} showNotice={setNotice} />}
+
+        <TelegramPopup open={telegramOpen} onOpenChange={open => { if (!open) setDismissedTelegram(telegramKey); }} title={content.telegram.title} message={content.telegram.message} url={content.telegram.url} />
+        <MediaPopup open={mediaOpen} onOpenChange={open => { if (!open) setDismissedMedia(mediaKey); }} asset={content.popup.asset} title={content.popup.title} />
+
+        {depositUnavailable && <div role="status" aria-live="polite" className="deposit-unavailable-message">Deposit not available</div>}
 
         {notice && (
           <div role="status" className="fixed bottom-[78px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg">
@@ -212,9 +251,13 @@ const depositTasks = [
 function DepositView({
   navigate,
   showComingSoon,
+  onBuy,
+  buying,
 }: {
   navigate: (screen: Screen) => void;
   showComingSoon: (label: string) => void;
+  onBuy: () => void;
+  buying: boolean;
 }) {
   return (
     <div className="min-h-dvh bg-white pb-[76px] sm:min-h-[calc(100dvh-48px)]">
@@ -270,7 +313,7 @@ function DepositView({
                   </div>
                 </div>
               </div>
-              <button type="button" className="h-[38px] w-[69px] rounded-[10px] bg-black text-[15px] font-medium text-white" onClick={() => showComingSoon('Buy')}>Buy</button>
+              <button type="button" className="h-[38px] w-[69px] rounded-[10px] bg-black text-[15px] font-medium text-white disabled:opacity-70" disabled={buying} onClick={onBuy}>Buy</button>
             </article>
           ))}
         </section>
