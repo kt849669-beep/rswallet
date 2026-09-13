@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 import type { PublicAsset } from '@/lib/site-content';
 
 export function ManagedSlides({ slides }: { slides: PublicAsset[] }) {
@@ -18,4 +19,15 @@ export function ManagedSlides({ slides }: { slides: PublicAsset[] }) {
 }
 export function MediaPopup({ asset, title, open, onOpenChange }: { asset: PublicAsset | null; title: string; open: boolean; onOpenChange: (open: boolean) => void }) {
   return <Dialog open={open && !!asset} onOpenChange={onOpenChange}><DialogContent className="wallet-media-popup"><DialogTitle>{title}</DialogTitle><DialogDescription className="sr-only">Announcement from the demo site owner</DialogDescription>{asset && (asset.type.startsWith('video/') ? <video src={asset.url} controls playsInline preload="metadata" /> : <img src={asset.url} alt={title} />)}</DialogContent></Dialog>;
+}
+
+export function HomePosterPopup({ asset, open, onOpenChange }: { asset: PublicAsset | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+  return <Dialog open={open && !!asset} onOpenChange={onOpenChange}>
+    <DialogContent className="wallet-poster-popup" showCloseButton={false}>
+      <DialogTitle className="sr-only">Home poster</DialogTitle>
+      <DialogDescription className="sr-only">Close this poster to continue to your wallet.</DialogDescription>
+      <DialogClose className="wallet-poster-close" aria-label="Close Home poster"><X aria-hidden="true" /></DialogClose>
+      {asset && <img src={asset.url} alt={asset.name} />}
+    </DialogContent>
+  </Dialog>;
 }

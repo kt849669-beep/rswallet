@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 const supported = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4', 'video/webm'];
 
 export async function POST(request: Request) {
-  const denied = guardAdmin(request, true); if (denied) return denied;
+  const denied = await guardAdmin(request, true); if (denied) return denied;
   if (Number(request.headers.get('content-length')) > 27 * 1024 * 1024) return json({ error: 'Maximum upload size is 25 MB.' }, 413);
   try {
     // Cap the whole multipart stream before parsing it in the Worker isolate.
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   } catch { return json({ error: 'Upload failed. Please select the file and try again.' }, 400); }
 }
 export async function PATCH(request: Request) {
-  const denied = guardAdmin(request, true); if (denied) return denied;
+  const denied = await guardAdmin(request, true); if (denied) return denied;
   try {
     const value = await request.json() as { id: string; deleted: boolean };
     if (!/^[a-f0-9-]{36}$/.test(value.id) || typeof value.deleted !== 'boolean') return json({ error: 'Invalid file.' }, 400);

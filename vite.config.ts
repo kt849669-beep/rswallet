@@ -45,6 +45,7 @@ export default defineConfig(async () => {
   const { cloudflare } = await import('@cloudflare/vite-plugin');
 
   return {
+    cacheDir: process.env.RSWALLET_TEST_STATE ? 'node_modules/.vite-rswallet-test' : undefined,
     css: { postcss: { plugins: [tailwindcss()] } },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
@@ -53,6 +54,8 @@ export default defineConfig(async () => {
       vinext(),
       sites(),
       cloudflare({
+        persistState: process.env.RSWALLET_TEST_STATE ? { path: process.env.RSWALLET_TEST_STATE } : true,
+        inspectorPort: process.env.RSWALLET_TEST_STATE ? false : undefined,
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
         config: localBindingConfig,
       }),

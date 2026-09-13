@@ -1,21 +1,15 @@
-import { env } from 'cloudflare:workers';
+import { bindings, json } from './runtime';
+import { readAdminSession } from './admin-auth';
+export { bindings, json, noStore } from './runtime';
 import { defaultContent, type ContentSettings, type MediaAsset } from './site-content';
 
-type Bindings = { DB: D1Database; MEDIA: R2Bucket; ADMIN_EMAIL?: string; LOCAL_CONTENT_ADMIN?: string };
-export const bindings = () => env as unknown as Bindings;
-export const noStore = { 'Cache-Control': 'no-store, private', 'X-Content-Type-Options': 'nosniff' };
-export function json(value: unknown, status = 200) { return Response.json(value, { status, headers: noStore }); }
-
-export function adminIdentity(h: Headers) {
-  const runtime = bindings();
-  const localPreview = import.meta.env.DEV && runtime.LOCAL_CONTENT_ADMIN === 'true' && /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(h.get('host') ?? '');
-  const email = h.get('oai-authenticated-user-email')?.toLowerCase();
-  const signedIn = !!h.get('oai-authenticated-user-id') && !!email;
-  return { allowed: localPreview || (signedIn && !!runtime.ADMIN_EMAIL && email === runtime.ADMIN_EMAIL.toLowerCase()), signedIn, localPreview };
+export async function adminIdentity(h: Headers) {
+  const session = await readAdminSession(h);
+  return { allowed: !!session, signedIn: !!session, localPreview: import.meta.env.DEV, email: session?.email };
 }
-export function guardAdmin(request: Request, mutation = false): Response | null {
-  const identity = adminIdentity(request.headers);
-  if (!identity.allowed) return json({ error: identity.signedIn ? 'This account cannot edit this site.' : 'Sign in with the site owner’s ChatGPT account.' }, identity.signedIn ? 403 : 401);
+export async function guardAdmin(request: Request, mutation = false): Promise<Response | null> {
+  const identity = await adminIdentity(request.headers);
+  if (!identity.allowed) return json({ error: 'Sign in to the admin panel.' }, 401);
   if (mutation) {
     const origin = request.headers.get('origin');
     if (!origin || origin !== new URL(request.url).origin || request.headers.get('sec-fetch-site') === 'cross-site') return json({ error: 'This request must start in your admin panel.' }, 403);
@@ -31,7 +25,12 @@ export async function readAssets(): Promise<MediaAsset[]> {
   return result.results;
 }
 export async function writeContent(content: ContentSettings): Promise<boolean> {
-  const document = JSON.stringify({ ...content, revision: content.revision + 1 });
+  const previous = await readContent();
+  if (previous.revision !== content.revision) return false;
+  const version = (key: 'homeBanner' | 'telegram' | 'popup') => JSON.stringify(previous[key]) === JSON.stringify(content[key])
+    ? previous.presentationVersions?.[key] ?? 0 : content.revision + 1;
+  const presentationVersions = { homeBanner: version('homeBanner'), telegram: version('telegram'), popup: version('popup') };
+  const document = JSON.stringify({ ...content, presentationVersions, revision: content.revision + 1 });
   const timestamp = new Date().toISOString();
   const query = content.revision === 0
     ? bindings().DB.prepare('INSERT INTO site_content (id, revision, document, updated_at) VALUES (1, 1, ?, ?) ON CONFLICT(id) DO NOTHING').bind(document, timestamp)

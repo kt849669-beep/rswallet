@@ -29,25 +29,44 @@ export function GoogleAuthenticatorIcon({ className = '' }: { className?: string
     <path d="m15 39 9-15" stroke="#EA4335" strokeWidth="7" strokeLinecap="round" />
   </svg>;
 }
-
-export function WalletLogin({ phone, setPhone, password, setPassword, onSubmit, muted, showNotice }: {
+export function WalletLogin({ phone, setPhone, password, setPassword, onSubmit, muted, showNotice, busy = false }: {
   phone: string; setPhone: (value: string) => void; password: string; setPassword: (value: string) => void;
-  onSubmit: (event: React.FormEvent) => void; muted: boolean; showNotice: (text: string) => void;
+  onSubmit: (event: React.FormEvent) => void; muted: boolean; showNotice: (text: string) => void; busy?: boolean;
 }) {
+  const [submitted, setSubmitted] = useState(false);
+
+  const phoneError = submitted && phone.length !== 10 ? 'Mobile number must be 10 digits.' : '';
+  const passError = submitted && (password.length < 4 || !/[0-9]/.test(password) || !/[a-zA-Z]/.test(password))
+    ? 'Password must be at least 4 characters, containing at least 1 number and 1 letter.' : '';
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmitted(true);
+    if (phone.length !== 10 || password.length < 4 || !/[0-9]/.test(password) || !/[a-zA-Z]/.test(password)) {
+      return;
+    }
+    onSubmit(event);
+  };
+
   return <div className={`login-page ${muted ? 'is-muted' : ''}`}>
     <header className="login-header"><h1>LOG IN</h1></header>
-    <form className="login-form" onSubmit={onSubmit} autoComplete="off">
+    <form className="login-form" onSubmit={handleSubmit} autoComplete="off">
       <div className="login-fields">
         <label className="login-field"><Phone aria-hidden="true" strokeWidth={1.7} />
-          <Input aria-label="Mobile number" name="demo-mobile" inputMode="numeric" autoComplete="off" maxLength={10} value={phone} onChange={event => setPhone(event.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="Enter Your Phone Number" className="wallet-input" />
+          <Input aria-label="Mobile number" name="demo-mobile" inputMode="numeric" autoComplete="off" maxLength={10} value={phone}
+            onChange={event => { setPhone(event.target.value.replace(/\D/g, '').slice(0, 10)); setSubmitted(false); }}
+            placeholder="Enter Your Phone Number" className="wallet-input" />
         </label>
-        <label className="login-field"><LockKeyhole aria-hidden="true" strokeWidth={1.7} />
-          <Input aria-label="Password" name="demo-password" type="password" autoComplete="off" value={password} onChange={event => setPassword(event.target.value)} placeholder="Enter Password" className="wallet-input" />
+        {phoneError && <p className="login-field-error">{phoneError}</p>}
+        <label className="login-field" style={{ marginTop: phoneError ? '4px' : '' }}><LockKeyhole aria-hidden="true" strokeWidth={1.7} />
+          <Input aria-label="Password" name="demo-password" type="password" autoComplete="off" value={password}
+            onChange={event => { setPassword(event.target.value); setSubmitted(false); }}
+            placeholder="Enter Password" className="wallet-input" />
         </label>
+        {passError && <p className="login-field-error">{passError}</p>}
         <button type="button" className="forgot-password" onClick={() => showNotice('Use test details to enter this demo.')}>Forget Password</button>
       </div>
-      <Button type="submit" disabled={phone.length !== 10 || password.length === 0} className="login-submit">LOG IN</Button>
-      <p className="login-demo-note">Demo preview · Use test details only</p>
+      <Button type="submit" disabled={busy} className="login-submit">{busy ? 'PLEASE WAIT…' : 'LOG IN'}</Button>
     </form>
   </div>;
 }
@@ -61,8 +80,7 @@ export function WalletHome({ footer, showComingSoon, content }: { footer: ReactN
         <div><h2>USDT Ratio</h2><p className="usdt-value">1 USDT ≈ 109.5 INR</p><p className="bonus-note">Bonus ratio: 0%</p></div>
         <div><h2>INR Bonus Ratio</h2><p className="ratio-percent">4%</p></div>
       </section>
-      {content.homeBanner.enabled && (content.homeBanner.useDefault ? <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={598} width={539} height={135} alt="Newbie Reward" className="newbie-banner" /> : content.homeBanner.asset ? <img src={content.homeBanner.asset.url} alt="Newbie Reward" className="newbie-banner managed-banner" /> : null)}
-      <p className="upi-note">You&apos;re not bound to UPI</p>
+      <ScreenshotAsset src="/rswallet-home.jpeg" sourceWidth={589} sourceHeight={1280} x={25} y={598} width={539} height={135} alt="Newbie Reward" className="newbie-banner" />
       <Button className="bind-upi" onClick={() => showComingSoon('Bind UPI')}>Bind UPI Now</Button>
       <section className="balance-card">
         {['Balance', 'Today Received', 'Top up Bonus', 'Team Commission'].map(label => <button key={label} type="button" onClick={() => showComingSoon(label)}>

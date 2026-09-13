@@ -2,6 +2,7 @@ export type MediaAsset = { id: string; name: string; type: string; size: number;
 export type Placement = { enabled: boolean; assetId: string | null };
 export type ContentSettings = {
   revision: number; updatedAt: string;
+  presentationVersions?: { homeBanner: number; telegram: number; popup: number };
   slidesEnabled: boolean;
   slides: { assetId: string; enabled: boolean }[];
   homeBanner: Placement; profileBanner: Placement;

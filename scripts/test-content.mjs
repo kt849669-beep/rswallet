@@ -1,9 +1,14 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 
-const origin = 'http://localhost:3000';
+const origin = process.env.RSWALLET_TEST_ORIGIN ?? 'http://localhost:3100';
+assert.equal(new URL(origin).hostname, 'localhost');
+assert.notEqual(new URL(origin).port, '3000', 'Use an isolated test server.');
+const login = await fetch(origin + '/api/admin/auth', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'admin@rswallet.com', password: 'admin@01234' }) });
+assert.equal(login.status, 200);
+const cookie = login.headers.get('set-cookie').split(';')[0];
 async function call(path, method = 'GET', body, extraHeaders = {}) {
-  const response = await fetch(origin + path, { method, headers: { ...(method === 'GET' ? {} : { Origin: origin, 'Content-Type': 'application/json' }), ...extraHeaders }, body: body === undefined ? undefined : JSON.stringify(body) });
+  const response = await fetch(origin + path, { method, headers: { Cookie: cookie, ...(method === 'GET' ? {} : { Origin: origin, 'Content-Type': 'application/json' }), ...extraHeaders }, body: body === undefined ? undefined : JSON.stringify(body) });
   const text = await response.text();
   let result; try { result = JSON.parse(text); } catch { result = text; }
   return { status: response.status, body: result };
@@ -13,7 +18,7 @@ assert.equal(start.status, 200);
 assert.equal(start.body.localPreview, true, 'Run this test only against the local development preview.');
 const original = structuredClone(start.body.content);
 const asset = start.body.assets.find(a => !a.deletedAt);
-assert.ok(asset, 'Upload one test image through the admin UI before running these tests.');
+assert.ok(asset, 'Run test-live.mjs first to create a test image in the isolated database.');
 try {
   const anonymousStatus = await new Promise((resolve, reject) => {
     http.get(origin + '/api/admin/content', { headers: { Host: '127.0.0.2:3000' } }, response => { response.resume(); resolve(response.statusCode); }).on('error', reject);

