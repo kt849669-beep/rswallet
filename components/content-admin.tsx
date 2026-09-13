@@ -34,17 +34,6 @@ function AssetPreview({ asset, label, fallback }: { asset?: MediaAsset; label: s
   if (asset?.deletedAt) return <div className="admin-empty-preview"><Trash2 /><span>This file is in Trash</span></div>;
   if (asset) return asset.type.startsWith('video/') ? <video className="admin-media-preview" src={`/api/media/${asset.id}`} controls playsInline preload="metadata" /> : <img className="admin-media-preview" src={`/api/media/${asset.id}`} alt={label} />;
   if (fallback) return <div className={`admin-default-preview default-${fallback}`}><img src={fallback === 'profile' ? '/rswallet-profile.jpeg' : '/rswallet-home.jpeg'} alt={`Original ${label}`} /></div>;
-  const result = await response.json() as T & { error?: string };
-  if (!response.ok) throw new Error(result.error || 'This action could not be completed.');
-  return result;
-}
-function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
-  return <label className="admin-toggle"><span>{checked ? 'Visible' : 'Hidden'}</span><Switch aria-label={label} checked={checked} onCheckedChange={onChange} /></label>;
-}
-function AssetPreview({ asset, label, fallback }: { asset?: MediaAsset; label: string; fallback?: 'home' | 'profile' | 'slide' }) {
-  if (asset?.deletedAt) return <div className="admin-empty-preview"><Trash2 /><span>This file is in Trash</span></div>;
-  if (asset) return asset.type.startsWith('video/') ? <video className="admin-media-preview" src={`/api/media/${asset.id}`} controls playsInline preload="metadata" /> : <img className="admin-media-preview" src={`/api/media/${asset.id}`} alt={label} />;
-  if (fallback) return <div className={`admin-default-preview default-${fallback}`}><img src={fallback === 'profile' ? '/rswallet-profile.jpeg' : '/rswallet-home.jpeg'} alt={`Original ${label}`} /></div>;
   return <div className="admin-empty-preview"><ImagePlus /><span>Choose an image or video</span></div>;
 }
 export function ContentAdmin({ initial }: { initial: AdminData }) {
