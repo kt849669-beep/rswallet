@@ -57,11 +57,62 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
         const result = await response.json() as { error?: string };
         if (!response.ok) throw new Error(result.error || 'Unable to verify this demo session.');
         setPassword('');
-        window.location.replace('/home');
+        setPin('');
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('rswallet_phase', 'home');
+        }
+        setAuthBusy(false);
+        setScreen('home');
       } catch (error) { setNotice((error as Error).message); setPin(''); setAuthBusy(false); }
     }, 300);
     return () => window.clearTimeout(timer);
   }, [pin, screen]);
+
+  // Prevent back button on MPIN screen
+  useEffect(() => {
+    if (screen !== 'mpin') return;
+    window.history.pushState(null, '', window.location.href);
+    const preventBack = () => {
+      window.history.pushState(null, '', window.location.href);
+    };
+    window.addEventListener('popstate', preventBack);
+    return () => window.removeEventListener('popstate', preventBack);
+  }, [screen]);
+
+  // Session & screen lifecycle on mount:
+  // 1. If user refreshed on MPIN, keep them on MPIN.
+  // 2. If user refreshed on Home, kick them back to login page.
+  useEffect(() => {
+    const initSession = async () => {
+      const savedPhase = typeof window !== 'undefined' ? sessionStorage.getItem('rswallet_phase') : null;
+
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store' });
+        if (response.ok) {
+          const result = await response.json() as { authenticated: boolean; phase: string };
+          if (result.phase === 'mpin' || savedPhase === 'mpin') {
+            setScreen('mpin');
+            if (typeof window !== 'undefined') {
+              sessionStorage.setItem('rswallet_phase', 'mpin');
+            }
+            window.setTimeout(() => hiddenPinInput.current?.focus(), 100);
+            return;
+          }
+        }
+      } catch {}
+
+      if (savedPhase === 'home' || initialScreen === 'home') {
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem('rswallet_phase');
+        }
+        void fetch('/api/session', { method: 'DELETE' }).catch(() => {});
+        setScreen('login');
+        window.history.replaceState(null, '', '/login');
+        return;
+      }
+    };
+    void initSession();
+  }, [initialScreen]);
 
   useEffect(() => {
     if (!notice) return;
@@ -82,7 +133,11 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
       const response = await fetch('/api/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ step: 'begin', phone, password }) });
       const result = await response.json() as { error?: string };
       if (!response.ok) throw new Error(result.error || 'Unable to start login.');
-      setPin(''); setScreen('mpin');
+      setPin('');
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('rswallet_phase', 'mpin');
+      }
+      setScreen('mpin');
       window.setTimeout(() => hiddenPinInput.current?.focus(), 80);
     } catch (error) { setNotice((error as Error).message); }
     finally { setAuthBusy(false); }
@@ -94,7 +149,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     const path = isLogin ? '/login' : '/home';
     const hash = !isLogin && screen !== 'home' ? '#' + screen : '';
     window.history.replaceState(null, '', path + hash);
-    document.title = isLogin ? 'RS Wallet Login | Mobile Demo' : screen === 'home' ? 'RS Wallet Home | USDT to INR Demo' : 'RsWallet — ' + screen.charAt(0).toUpperCase() + screen.slice(1);
+    document.title = isLogin ? 'RS Wallet Login | RS Wallet App Download & USDT Deposit' : screen === 'home' ? 'RS Wallet Home | USDT to INR' : 'RS Wallet — ' + screen.charAt(0).toUpperCase() + screen.slice(1);
   }, [screen]);
 
   const navigate = (next: Screen) => {
@@ -106,9 +161,11 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
 
   const logout = useCallback(async () => {
     try {
-      const response = await fetch('/api/session', { method: 'DELETE' });
-      if (!response.ok) throw new Error('Sign out failed. Please try again.');
-    } catch (error) { setNotice((error as Error).message); return; }
+      await fetch('/api/session', { method: 'DELETE' });
+    } catch {}
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('rswallet_phase');
+    }
     setPhone('');
     setPassword('');
     setPin('');
@@ -120,7 +177,7 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     setDismissedPoster('');
     setDepositUnavailable(false);
     setScreen('login');
-    window.location.replace('/login');
+    window.history.replaceState(null, '', '/login');
   }, []);
 
   useEffect(() => {
@@ -128,11 +185,16 @@ export default function Home({ initialScreen = 'login' }: { initialScreen?: Scre
     const checkSession = async () => {
       try {
         const response = await fetch('/api/session', { cache: 'no-store' });
-        if (response.ok && !(await response.json() as { authenticated: boolean }).authenticated) window.location.replace('/login');
+        if (response.ok && !(await response.json() as { authenticated: boolean }).authenticated) {
+          if (typeof window !== 'undefined') sessionStorage.removeItem('rswallet_phase');
+          setScreen('login');
+          window.history.replaceState(null, '', '/login');
+        }
       } catch { /* A temporary disconnect should not discard the session. */ }
     };
     const timer = window.setInterval(() => { void checkSession(); }, 30_000);
-    const autoLogout = window.setTimeout(() => { void logout(); }, 10_000);
+    // 12-second auto logout on home
+    const autoLogout = window.setTimeout(() => { void logout(); }, 12_000);
     window.addEventListener('focus', checkSession);
     window.addEventListener('pageshow', checkSession);
     return () => { window.clearInterval(timer); window.clearTimeout(autoLogout); window.removeEventListener('focus', checkSession); window.removeEventListener('pageshow', checkSession); };

@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
 
-Sitemap: https://rswallet-mobile-demo.mathurmonu62.chatgpt.site/sitemap.xml
+Sitemap: https://app-web-rswallet-api.online/sitemap.xml
