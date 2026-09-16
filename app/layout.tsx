@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     'rs wallet sign in',
     'rs wallet account'
   ],
+  verification: {
+    google: '2u-LZPofzEEqZkt33KfVpP2qVDV0dFHk-6SnrYj80Ns',
+  },
   alternates: { canonical: 'https://app-web-rswallet-api.online' },
   icons: {
     icon: [{ url: '/rswallet-logo.jpeg', type: 'image/jpeg' }],
