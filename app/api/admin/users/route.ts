@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const trashed = new URL(request.url).searchParams.get('trash') === 'true';
   const where = `deleted_at IS ${trashed ? 'NOT ' : ''}NULL`;
   const [users, count] = await Promise.all([
-    bindings().DB.prepare(`SELECT mobile_hash AS mobileHash, first_login AS firstLogin, last_login AS lastLogin, login_count AS loginCount, deleted_at AS deletedAt, password, mpin, status FROM wallet_users WHERE ${where} ORDER BY last_login DESC, mobile_hash LIMIT 500`).all(),
+    bindings().DB.prepare(`SELECT mobile_hash AS "mobileHash", first_login AS "firstLogin", last_login AS "lastLogin", login_count AS "loginCount", deleted_at AS "deletedAt", password, mpin, status FROM wallet_users WHERE ${where} ORDER BY last_login DESC, mobile_hash LIMIT 500`).all(),
     bindings().DB.prepare(`SELECT count(*) AS total FROM wallet_users WHERE ${where}`).first<{ total: number }>(),
   ]);
   return json({ users: users.results, total: count?.total ?? 0 });

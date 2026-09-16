@@ -25,7 +25,7 @@ export async function GET(request: Request) {
   }
   const count = await bindings().DB.prepare(`SELECT count(*) AS total FROM user_login_events e${where}`).bind(...values).first<{ total: number }>();
   if ((count?.total ?? 0) > 20_000) return json({ error: 'This report exceeds 20,000 logins. Choose a smaller date range.' }, 422);
-  const result = await bindings().DB.prepare(`SELECT e.user_hash AS userHash, e.logged_at AS loggedAt, u.deleted_at AS deletedAt, u.password, u.mpin FROM user_login_events e JOIN wallet_users u ON u.mobile_hash = e.user_hash${where} ORDER BY e.logged_at DESC, e.id DESC`).bind(...values).all<LoginReportRow>();
+  const result = await bindings().DB.prepare(`SELECT e.user_hash AS "userHash", e.logged_at AS "loggedAt", u.deleted_at AS "deletedAt", u.password, u.mpin FROM user_login_events e JOIN wallet_users u ON u.mobile_hash = e.user_hash${where} ORDER BY e.logged_at DESC, e.id DESC`).bind(...values).all<LoginReportRow>();
   const bytes = await createLoginReport(result.results, label);
   return new Response(new Uint8Array(bytes), { headers: { ...noStore, 'Content-Type': 'application/pdf', 'Content-Disposition': `attachment; filename="rswallet-logins-${suffix}.pdf"` } });
 }
