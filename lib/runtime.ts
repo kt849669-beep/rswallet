@@ -37,12 +37,10 @@ class MockD1Statement {
 const dbMock = {
   prepare: (query: string) => new MockD1Statement(query),
   batch: async (statements: MockD1Statement[]) => {
-    // Supabase RPC does not have a batch API out of the box, we just run sequentially.
-    const results = [];
-    for (const stmt of statements) {
-      results.push(await stmt.run());
-    }
-    return results;
+    const queries = statements.map(stmt => ({ query_text: stmt._getSql(), params: stmt.args }));
+    const { error } = await supabase.rpc('pg_batch_exec', { queries });
+    if (error) throw new Error(error.message);
+    return statements.map(() => ({ meta: { changes: 1 } }));
   }
 };
 
@@ -74,6 +72,7 @@ const mediaMock = {
     if (error || !data) return null;
     return {
       body: data.stream(),
+      size: data.size,
       headers: new Headers({ 'Content-Type': data.type })
     };
   }

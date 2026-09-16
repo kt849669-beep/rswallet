@@ -21,7 +21,7 @@ export async function readContent(): Promise<ContentSettings> {
   return row ? { ...JSON.parse(row.document), revision: row.revision, updatedAt: row.updated_at } : defaultContent();
 }
 export async function readAssets(): Promise<MediaAsset[]> {
-  const result = await bindings().DB.prepare('SELECT id, name, type, size, created_at AS createdAt, deleted_at AS deletedAt FROM content_media ORDER BY created_at DESC LIMIT 250').all<MediaAsset>();
+  const result = await bindings().DB.prepare('SELECT id, name, type, size, created_at AS "createdAt", deleted_at AS "deletedAt" FROM content_media ORDER BY created_at DESC LIMIT 250').all<MediaAsset>();
   return result.results;
 }
 export async function writeContent(content: ContentSettings): Promise<boolean> {
