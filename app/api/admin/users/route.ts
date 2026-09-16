@@ -21,8 +21,8 @@ export async function PATCH(request: Request) {
   if (!value.all && (!Array.isArray(ids) || !ids.length || ids.length > 500 || ids.some(id => typeof id !== 'string'))) return json({ error: 'Select valid users.' }, 400);
   const excluded = value.exclude ?? [];
   if (!Array.isArray(excluded) || excluded.length > 500 || excluded.some(id => typeof id !== 'string')) return json({ error: 'Invalid excluded users.' }, 400);
-  // JSON_each keeps bulk selection within D1's SQL parameter limit.
-  const selection = value.all ? (excluded.length ? ' AND mobile_hash NOT IN (SELECT value FROM json_each(?))' : '') : ' AND mobile_hash IN (SELECT value FROM json_each(?))';
+  // Postgres requires jsonb_array_elements_text for iterating JSON arrays as text
+  const selection = value.all ? (excluded.length ? ' AND mobile_hash NOT IN (SELECT * FROM jsonb_array_elements_text(?::jsonb))' : '') : ' AND mobile_hash IN (SELECT * FROM jsonb_array_elements_text(?::jsonb))';
   const query = bindings().DB.prepare(`UPDATE wallet_users SET deleted_at = ? WHERE deleted_at IS ${value.deleted ? '' : 'NOT '}NULL${selection}`);
   const args = selection ? [value.deleted ? Date.now() : null, JSON.stringify(value.all ? excluded : ids)] : [value.deleted ? Date.now() : null];
   const result = await query.bind(...args).run();
