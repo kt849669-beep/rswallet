@@ -10,27 +10,10 @@ export async function GET(request: Request) {
   const session = await readDemoSession(sessionToken(request));
   return json({ authenticated: session?.phase === 'active', phase: session?.phase ?? 'login' });
 }
-const rateLimits = new Map<string, number>();
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return json({ error: 'Start from your login page.' }, 403);
   if (!request.headers.get('content-type')?.startsWith('application/json')) return json({ error: 'JSON required.' }, 415);
-  
-  // Rate limiting (10 seconds per IP)
-  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
   const now = Date.now();
-  if (ip !== 'unknown') {
-    const lastAttempt = rateLimits.get(ip);
-    if (lastAttempt && now - lastAttempt < 10000) {
-      return json({ error: 'Too Many Requests, please wait 10 seconds.' }, 429);
-    }
-    rateLimits.set(ip, now);
-    // Cleanup old IPs to prevent memory leak
-    if (rateLimits.size > 1000) {
-      for (const [key, time] of rateLimits.entries()) {
-        if (now - time > 10000) rateLimits.delete(key);
-      }
-    }
-  }
 
   const raw = await request.text();
   if (raw.length > 256) return json({ error: 'Invalid login request.' }, 400);
