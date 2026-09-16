@@ -80,8 +80,8 @@ body:has(.telegram-popup) [data-slot="dialog-overlay"] { background: rgb(0 0 0 /
 .login-field .wallet-input { min-width: 0; font-size: calc(3.25 * var(--wallet-unit)); font-weight: 500; }
 .login-field-error { color: #e53935; font-size: 11px; margin-top: 4px; padding-left: 6px; font-weight: 500; line-height: 1.4; }
 .forgot-password { align-self: flex-end; margin-top: calc(3.5 * var(--wallet-unit)); font-size: calc(3.65 * var(--wallet-unit)); font-weight: 500; color: #4084e6; }
-.login-submit { position: absolute; left: calc(4.25 * var(--wallet-unit)); bottom: calc(19.4 * var(--wallet-unit)); width: calc(91.5 * var(--wallet-unit)); height: calc(13.35 * var(--wallet-unit)); border-radius: calc(2.1 * var(--wallet-unit)); background: #000; color: #fff; font-size: calc(4.45 * var(--wallet-unit)); font-weight: 500; }
-.login-submit:disabled { opacity: 1; background: #828282; }
+.login-submit { position: absolute; left: calc(4.25 * var(--wallet-unit)); bottom: calc(19.4 * var(--wallet-unit)); width: calc(91.5 * var(--wallet-unit)); height: calc(13.35 * var(--wallet-unit)); border-radius: calc(2.1 * var(--wallet-unit)); background: #828282; color: #fff; font-size: calc(4.45 * var(--wallet-unit)); font-weight: 500; }
+.login-submit:disabled { opacity: 0.6; background: #9ca3af; }
 .pin-caret { display: block; width: 1px; height: 24px; background: #555; }
 .home-content { padding: calc(4.6 * var(--wallet-unit)) calc(4.25 * var(--wallet-unit)) calc(5 * var(--wallet-unit)); }
 .home-title { font-size: calc(4.7 * var(--wallet-unit)); line-height: 1.5; font-weight: 600; margin-bottom: calc(5.05 * var(--wallet-unit)); letter-spacing: -.025em; }

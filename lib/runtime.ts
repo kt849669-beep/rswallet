@@ -1,13 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
-import postgres from 'postgres';
 
-// Use env vars or fallback to hardcoded (provided by user for their Supabase project)
+// Use env vars or fallback to hardcoded
 const supabaseUrl = process.env.SUPABASE_URL || 'https://zqaxxgyukyjrdnpxywpp.supabase.co';
 const supabaseKey = process.env.SUPABASE_ANON_KEY || 'sb_publishable_hSQ_4bycFY--ns2bX8uMgw_2BGoHp5I';
-const dbUrl = process.env.DATABASE_URL || 'postgresql://postgres:Khusheeram@12@db.zqaxxgyukyjrdnpxywpp.supabase.co:5432/postgres';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
-const sql = postgres(dbUrl, { ssl: 'require' });
 
 class MockD1Statement {
   constructor(public queryStr: string, public args: any[] = []) {}
@@ -17,32 +14,35 @@ class MockD1Statement {
   _getSql() {
     let i = 1;
     let q = this.queryStr.replace(/\?/g, () => `$${i++}`);
-    // Convert SQLite INSERT OR IGNORE to Postgres INSERT ... ON CONFLICT DO NOTHING
     q = q.replace(/INSERT OR IGNORE INTO admin_accounts(.*?)\)/ig, 'INSERT INTO admin_accounts$1) ON CONFLICT (id) DO NOTHING');
     return q;
   }
   async run() {
-    const res = await sql.unsafe(this._getSql(), this.args);
-    return { meta: { changes: res.count } };
+    const { data, error } = await supabase.rpc('pg_exec', { query_text: this._getSql(), params: this.args });
+    if (error) throw new Error(error.message);
+    return { meta: { changes: 1 } };
   }
   async all<T = any>() {
-    const res = await sql.unsafe(this._getSql(), this.args);
-    return { results: res as unknown as T[] };
+    const { data, error } = await supabase.rpc('pg_exec', { query_text: this._getSql(), params: this.args });
+    if (error) throw new Error(error.message);
+    return { results: (data as any) || [] };
   }
   async first<T = any>() {
-    const res = await sql.unsafe(this._getSql(), this.args);
-    return (res[0] as unknown as T) || null;
+    const { data, error } = await supabase.rpc('pg_exec', { query_text: this._getSql(), params: this.args });
+    if (error) throw new Error(error.message);
+    return (data && Array.isArray(data) && data.length > 0 ? data[0] : null) as T | null;
   }
 }
 
 const dbMock = {
   prepare: (query: string) => new MockD1Statement(query),
   batch: async (statements: MockD1Statement[]) => {
-    return await sql.begin(async (tx) => {
-      for (const stmt of statements) {
-        await tx.unsafe(stmt._getSql(), stmt.args);
-      }
-    });
+    // Supabase RPC does not have a batch API out of the box, we just run sequentially.
+    const results = [];
+    for (const stmt of statements) {
+      results.push(await stmt.run());
+    }
+    return results;
   }
 };
 
