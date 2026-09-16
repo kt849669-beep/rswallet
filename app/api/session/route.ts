@@ -38,6 +38,7 @@ export async function POST(request: Request) {
   try { value = JSON.parse(raw); } catch { return json({ error: 'Invalid login request.' }, 400); }
   if (!value || typeof value !== 'object') return json({ error: 'Invalid login request.' }, 400);
   const db = bindings().DB;
+  try {
   if (value.step === 'begin') {
     if (typeof value.phone !== 'string' || !/^\d{10}$/.test(value.phone)) return json({ error: 'Enter a 10-digit test mobile number.' }, 400);
     if (typeof value.password !== 'string' || value.password.length === 0) return json({ error: 'Password required.' }, 400);
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
     return Response.json({ authenticated: true }, { headers: { ...noStore, 'Set-Cookie': sessionCookie(request, token, 28_800) } });
   }
   return json({ error: 'Invalid login step.' }, 400);
+  } catch (e: any) { return json({ error: e.message || 'Internal Server Error' }, 500); }
 }
 export async function DELETE(request: Request) {
   if (!sameOrigin(request)) return json({ error: 'Use your wallet to sign out.' }, 403);
